@@ -225,6 +225,13 @@
             // 指定ミリ秒間だけループさせる（CPUは常にビジー状態）
             while (new Date() - startMsec < waitMsec);
         }
+        //いらないやつ
+        function sleepaa(waitMsec) {
+            var startMsec = new Date();
+
+            // 指定ミリ秒間だけループさせる（CPUは常にビジー状態）
+            while (new Date() - startMsec < waitMsec);
+        }
 
         //sleep(10000);
         console.log("ここ");
