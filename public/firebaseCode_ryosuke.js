@@ -10,6 +10,19 @@
 *
 */
 
+async function getProjectName(){
+    let ID=getParam("project");
+    let buff=await db.collection("project").doc(ID).get()
+    .then((querySnapshot)=>{
+        let temp=querySnapshot.data()["projectName"];
+        return temp;
+    })
+    .catch((error)=>{
+        console.log("データの取得失敗");
+    })
+    console.log(buff);
+    return buff;
+}
 
 async function getProjectMembers(){
     let ID;

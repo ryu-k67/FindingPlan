@@ -17,41 +17,58 @@
     <header>
         <h1>
             <a href="/" class="header-title">Finding Plan</a>
+            <button class="btnripple" onclick="logout()">ログアウト</button>
             <div class="line"></div>
         </h1>
+
     </header>
     <div class="content">
-        <!-- コピー対象要素とコピーボタン -->
+        <p id="innerName" style="font-size: 40px;padding:0 0;margin:5px 0;"></p>
 
+        <!-- コピー対象要素とコピーボタン -->
         <button class="btnripple" onclick="copyToClipboard()">URLをコピー</button>
-        <br>
-        <br>
+
+        <div class="guideArea firstGuide">
+            <p>[1]表の+を押す. </p>
+        </div>
+        <p></p>
         <div id="dragTableArea"></div>
         <ul>
             <ui>
                 <div class="hideArea">
-                    <br>
+                    <div class="guideArea">
+                        <p>[2-1]ログインする方は下のボタンを押してください.</p>
+                    </div>
                     <button id="login" class="btnripple" onclick="onClickLogin()">ログイン</button>
                 </div>
             </ui>
             <ui style="padding: 0 1em;">
                 <div class="hideArea">
-                    <p>ログインしないで利用:</p>
+                    <div class="guideArea">
+                        <p>[2-2]ログインしない方は下の入力欄に入力してください.</p>
+                    </div>
                     <label class="effect">
-                        <input id="unLoginUserName" type="text" placeholder="名前を入力してください." style="width: 12em;">
+                        <input id="unLoginUserName" type="text" placeholder="名前を入力し, Enterを押してください."
+                            style="width: 17.3em;">
                     </label>
-
                 </div>
-
-            </ui>
-            <ui>
-                <br>
-                <button id="scheduleSaveButton" class="btnripple" onclick="scheduleSave()"><span>保存</span></button>
             </ui>
         </ul>
-
-        <br>
-
+        <div class="saveHideArea">
+            <ul>
+                <ui>
+                    <button id="scheduleSaveButton" class="btnripple"
+                        onclick="scheduleSave()"><span>スケジュールを保存</span></button>
+                </ui>
+                <ui>
+                    <div class="guideArea">
+                        <p>[3]ドラック&ドロップで可能な時間をオレンジ, 不可能な時間を灰色にしてください.</p>
+                        <p>[4]スケジュールを保存ボタンを押してください.</p>
+                        <p>[5]URLをコピーを押して,プロジェクトメンバーに共有してください.</p>
+                    </div>
+                </ui>
+            </ul>
+        </div>
     </div>
 
 </body>
@@ -71,19 +88,25 @@
     var finish;
     var memberName;
     var userSchedule;
+    //ログインした人のmemberIndex-------
+    var loginMemberIndex = null;
     //--------------------------------
     //テーブル作成------------------------------------------------------
     //状況の取得------------------------
 
     document.addEventListener('DOMContentLoaded', async (event) => {
+        let projectName = await getProjectName();
+        console.log(projectName);
+        innerName.innerHTML = projectName;
         var week = ["日", "月", "火", "水", "木", "金", "土"];
         //開始日と終了日の取得----------------
         finish = await getProjectPeriodFinish();
         start = await getProjectPeriodStart();
         var tableTag = $("<table id=\"dragTable\" cellpadding=\"0\" cellspacing=\"0\">");
+
         //1行目の作成-----------------------
         var tableFirstRow = $("<tr></tr>").appendTo(tableTag);
-        $("<th class=\"doubleHeading\" rowspan=\"2\"></th>").appendTo(tableFirstRow);
+        var doubleHeadingCell = $("<th class=\"doubleHeading\" rowspan=\"2\"></th>").appendTo(tableFirstRow);
         for (let i = new Date(start); i <= finish; i.setDate(i.getDate() + 1)) {
             $("<th class=\"headingCol\" colspan=\"144\"><p><span>" + (i.getMonth() + 1) + "/" + i.getDate() + "(" + week[i.getDay()] + ")" + "</span></p></th>").appendTo(tableFirstRow);
         }
@@ -95,33 +118,6 @@
                 $("<th colspan=\"6\" class=\"time headingCol\"><p>" + j + ":" + "</p></th>").appendTo(tableSecondRow);
             }
         }
-
-        //それぞれのメンバーの行--------------
-        memberName = await getProjectMembers();
-        console.log(memberName);
-        console.log("memberName.length : " + memberName.length);
-        for (let i = 0; i < memberName.length; i++) {
-            var memberSch = await getProjectMemberSchedule(i);
-            var memberRow = await adjustSchedule(memberSch, i);
-            var tableRow = $("<tr></tr>").appendTo(tableTag);
-            $("<th class=\"headingRow\" >" + memberName[i] + "</th>").appendTo(tableRow);
-            var count = 0;
-            console.log(start, finish);
-            console.log(memberRow);
-            for (let j = new Date(start); j <= finish; j.setDate(j.getDate() + 1)) {
-                for (let k = 0; k < 144; k++) {
-                    if (memberRow[count] == 0) {
-                        $("<td class=\"notHighlight\"></td>").appendTo(tableRow);
-                    } else if (memberRow[count] == 1) {
-                        $("<td class=\"highlighted\"></td>").appendTo(tableRow);
-                    }
-                    count++;
-                }
-            }
-        }
-        //新規欄-----------------------------------------------------------
-        var tableRow = $("<tr></tr>").appendTo(tableTag);
-        var plusCellbox = $("<th id=\"plusCellbox\" class=\"headingRow\"></th>").appendTo(tableRow);
         //認証状態の確認
         firebase.auth().onAuthStateChanged(function (user) {
             if (user) {
@@ -129,8 +125,100 @@
                 console.log(userId);
 
             }
-            hantei();
+            loginMemberIndex = getLoginMemberIndex(userId);
         });
+        //それぞれのメンバーの行--------------
+        memberName = await getProjectMembers();
+        console.log("memberName=" + memberName);
+        console.log("memberName.length : " + memberName.length);
+        for (let i = 0; i < memberName.length; i++) {
+            var memberSch = await getProjectMemberSchedule(i);
+            var memberRow = await adjustSchedule(memberSch, i);
+            var tableRow = $("<tr></tr>").appendTo(tableTag);
+            var count = 0;
+            if (i == loginMemberIndex) {
+                //ログインした人のための処理----------
+                $("<th class=\"headingRow\" ><p>" + memberName[i] + "</p></th>").appendTo(tableRow);
+                console.log("error前のuserId" + userId);
+                console.log("error前のloginMemberIndex" + loginMemberIndex);
+                userSchedule = await getUserSchedule(userId);
+                for (let j = new Date(start); j <= finish; j.setDate(j.getDate() + 1)) {
+                    for (let k = 0; k < 144; k++) {
+                        if ((memberRow[count] % 3) == 0) {
+                            $("<td id=\"cell" + count + "\" class=\"drag\"></td>").appendTo(tableRow);
+                        } else if ((memberRow[count] % 3) == 2) {
+                            $("<td id=\"cell" + count + "\" class=\"highlighted drag\"></td>").appendTo(tableRow);
+                        } else if ((memberRow[count] % 3) == 1) {
+                            $("<td id=\"cell" + count + "\" class=\"middlelighted drag\"></td>").appendTo(tableRow);
+                        }
+                        count++;
+                    }
+                }
+                //saveButtonを表示-----------------
+                $(".saveHideArea").show();
+                //firstGuideを非表示---------------
+                $(".firstGuide").hide();
+            } else {
+                $("<th class=\"headingRow\" >" + memberName[i] + "</th>").appendTo(tableRow);
+                for (let j = new Date(start); j <= finish; j.setDate(j.getDate() + 1)) {
+                    for (let k = 0; k < 144; k++) {
+                        if ((memberRow[count] % 3) == 0) {
+                            $("<td class=\"notHighlight\"></td>").appendTo(tableRow);
+                        } else if ((memberRow[count] % 3) == 2) {
+                            $("<td class=\"highlighted\"></td>").appendTo(tableRow);
+                        } else if ((memberRow[count] % 3) == 1) {
+                            $("<td class=\"middlelighted\"></td>").appendTo(tableRow);
+                        }
+                        count++;
+                    }
+                }
+            }
+            console.log(start, finish);
+            console.log(memberRow);
+
+        }
+        if (loginMemberIndex === null) {
+            //新規欄-----------------------------------------------------------
+            var tableRow = $("<tr></tr>").appendTo(tableTag);
+            var plusCellbox = $("<th id=\"plusCellbox\" class=\"headingRow\"></th>").appendTo(tableRow);
+            unregistered();
+        } else {
+            registered();
+        }
+        async function registered() {
+            $("#dragTableArea").append(tableTag);
+            //テーブルのサイズ調整----------------
+            $(".headingCol span").css("left", doubleHeadingCell.outerWidth() + 10 + "px");
+            //テーブルのドラックした時の処理---------------------------------------
+            var isMouseDown = false;
+            $(".drag")
+                .mousedown(function () {
+                    isMouseDown = true;
+                    $(this).toggleClass("highlighted");
+                    return false; // prevent text selection
+                })
+                .mouseover(function () {
+                    if (isMouseDown) {
+                        $(this).toggleClass("highlighted");
+                    }
+                });
+            $(document)
+                .mouseup(function () {
+                    isMouseDown = false;
+                });
+        }
+
+
+        //認証状態の確認
+        //==================================================================================
+        /*firebase.auth().onAuthStateChanged(function (user) {
+            if (user) {
+                userId = firebase.auth().currentUser.uid;
+                console.log(userId);
+
+            }
+            unregistered();
+        });*/
         function sleep(waitMsec) {
             var startMsec = new Date();
 
@@ -140,7 +228,7 @@
 
         //sleep(10000);
         console.log("ここ");
-        async function hantei() {
+        async function unregistered() {
             if (userId != null) {
                 console.log("ろぐいんした");
                 //ログインした人のための処理----------
@@ -151,15 +239,20 @@
                 var i = 0;
                 for (let j = new Date(start); j <= finish; j.setDate(j.getDate() + 1)) {
                     for (let k = 0; k < 144; k++) {
-                        if (userSchedule[i] == 0) {
+                        if ((userSchedule[i] % 3) == 0) {
                             $("<td id=\"cell" + i + "\" class=\"drag\"></td>").appendTo(tableRow);
-                        } else {
+                        } else if ((userSchedule[i] % 3) == 2) {
                             $("<td id=\"cell" + i + "\" class=\"highlighted drag\"></td>").appendTo(tableRow);
+                        } else if ((userSchedule[i] % 3) == 1) {
+                            $("<td id=\"cell" + i + "\" class=\"middlelighted drag\"></td>").appendTo(tableRow);
                         }
                         i++;
                     }
                 }
-
+                //saveButtonを表示-----------------
+                $(".saveHideArea").show();
+                //firstGuideを非表示---------------
+                $(".firstGuide").hide();
             }
             else {
                 console.log("ろぐいんしてない");
@@ -217,7 +310,11 @@
                     $("<p>" + unLoginUserName + "</p>").appendTo($("#plusCellbox"));
                     //$("#plusCellbox").outerWidth();
                     $(".headingCol").css("left", plusCellbox.outerWidth() + "px");
-                    $(".headiing");
+                    //$(".headiing");
+                    //saveButtonを表示-----------------
+                    $(".saveHideArea").show();
+                    //firstGuideを非表示---------------
+                    $(".firstGuide").hide();
                 }
             }
         }
@@ -225,12 +322,14 @@
     });
     //----------------------------------------------------
     function scheduleSave() {
-        console.log("a");
+        console.log("scheduleSave()");
         var scheduleArray = [];
         var i = 0;
         for (var j = new Date(start); j <= finish; j.setDate(j.getDate() + 1)) {
             for (var k = 0; k < 144; k++) {
                 if ($("#cell" + i).hasClass("highlighted")) {
+                    scheduleArray.push(2);
+                } else if ($("#cell" + i).hasClass("middlelighted")) {
                     scheduleArray.push(1);
                 } else {
                     scheduleArray.push(0);
@@ -242,6 +341,7 @@
         if (memberName[0] == "") {
             num--;
         }
+        console.log("scheduleArray:" + scheduleArray);
         if (userId != null) {
             //ログインした人のための処理----------
             console.log(userSchedule);
@@ -259,7 +359,6 @@
         }
         return i;
     }
-
     //仮のfunction----------------------------------------------------
     function getParam(name, url) {
         if (!url) url = window.location.href;
@@ -300,7 +399,6 @@
                     return temp;
                 })
         }
-
         console.log(userName);
         return userName;
     }
@@ -596,6 +694,10 @@
         background-color: #ccc;
     }
 
+    table td.middlelighted {
+        background-color: rgb(216, 223, 126);
+    }
+
     table td.highlighted {
         /*background-color: #999;*/
         background-color: rgb(240, 173, 96);
@@ -674,6 +776,17 @@
         border: 1px solid rgb(240, 173, 96);
         outline: none;
         box-shadow: 0 0 5px 3px rgba(240, 173, 96, .5);
+    }
+
+    /*保存ボタンの非表示*/
+    .saveHideArea {
+        display: none;
+    }
+
+    /*guideArea使い方ガイドの文を書く*/
+    .guideArea {
+        margin: 1em;
+        color: rgb(139, 139, 139);
     }
 </style>
 
