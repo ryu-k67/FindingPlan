@@ -93,11 +93,10 @@ function login() {
 }
 
 //ログアウト処理
-/*
-logout.addEventListener('click', function() {
+function logout() {
   firebase.auth().signOut();
-});
-*/  
+  window.location="index.html";
+};
 
 //認証状態の確認
 firebase.auth().onAuthStateChanged(function(user) {

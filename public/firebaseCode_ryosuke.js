@@ -9,7 +9,6 @@
 *(データベースの宣言とgetParam関数は除く)
 *
 */
-
 async function getProjectName(){
     let ID=getParam("project");
     let buff=await db.collection("project").doc(ID).get()
@@ -135,7 +134,7 @@ function setWeekSchedule(userId,weekSchedule){
     })
 }
 
-async function changeWeekSchedule(userId,weekAfterSchedule){
+async function changeMySchedule(userId,weekAfterSchedule){
     let mySchedule=await db.collection("account").doc(userId).collection("myScheduleId").orderBy("date").get()
     .then(async(querySnapshot)=>{
         let temp=await querySnapshot.docs.map((doc)=>{
@@ -161,7 +160,7 @@ async function changeWeekSchedule(userId,weekAfterSchedule){
             console.log(weekAfterSchedule);
             console.log(mySchedule[j]);
             for(let k=0;k<144;k++){
-                if(mySchedule[j][k]<=1){
+                if(mySchedule[j][k]<=2){
                     mySchedule[j][k]=weekAfterSchedule[day*144+k];
                 }
             }
