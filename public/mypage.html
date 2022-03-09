@@ -21,18 +21,24 @@
         </h1>
     </header>
     <div class="content">
-        <div id="dragTableArea"></div>
-        <br>
-        <button id="scheduleSaveButton" class="btnripple" onclick="scheduleSave()">
-            Myスケを保存
-        </button>
-        <br>
-        <br>
-        <div id="weekSchedule"></div>
-        <br>
-        <button id="weekScheduleSaveButton" class="btnripple" onclick="weekScheduleSave()">
-            週間スケを保存
-        </button>
+        <div class="leftBar">
+            <p style="font-size: 40px; padding:0 0; margin:5px 0;">Myスケ</p>
+            <div id="dragTableArea"></div>
+            <p></p>
+            <button id="scheduleSaveButton" class="btnripple" onclick="scheduleSave()">
+                Myスケを保存
+            </button>
+        </div>
+        <div class="leftBar">
+            <p style="font-size: 40px; padding:0 0; margin:5px 0;">週間スケ</p>
+            <div id="weekSchedule"></div>
+            <p></p>
+            <button id="weekScheduleSaveButton" class="btnripple" onclick="weekScheduleSave()">
+                週間スケを保存
+            </button>
+        </div>
+
+
     </div>
 
 </body>
@@ -107,9 +113,9 @@
             $("<th class=\"headingRow\"><p>　" + "  (" + week[i] + ")  " + "</p></th>").appendTo(weekTableRow);
             for (var j = 0; j < 144; j++) {
                 if (weekUserSchedule[count] == 0) {
-                    $("<td id=\"weekCell" + count + "\" class=\"drag\"></td>").appendTo(weekTableRow);
+                    $("<td id=\"weekCell" + count + "\" class=\"dragWeek\"></td>").appendTo(weekTableRow);
                 } else {
-                    $("<td id=\"weekCell" + count + "\" class=\"highlighted drag\"></td>").appendTo(weekTableRow);
+                    $("<td id=\"weekCell" + count + "\" class=\"highlighted dragWeek\"></td>").appendTo(weekTableRow);
                 }
                 count++;
             }
@@ -129,12 +135,35 @@
                     $(this).toggleClass("highlighted");
                 }
             });
+        //週間スケのドラックしたときの処理-------------------------------------
+        var xb, xa, yb, ya;
+        $(".dragWeek")
+            .mousedown(function () {
+                isMouseDown = true;
+                let idName = $(this).attr("id");
+                let idNum = Number(idName.slice(8));
+                xb = Math.floor(idNum % 144);
+                yb = Math.floor(idNum / 144);
+                console.log("idName=" + idName + ", xb=" + xb + ", yb=" + yb);
+                //$(this).toggleClass("highlighted");
+                return false; // prevent text selection
+            })
+            .mouseup(function () {
+                isMouseDown = false;
+                let idName = $(this).attr("id");
+                let idNum = Number(idName.slice(8));
+                xa = Math.floor(idNum % 144);
+                ya = Math.floor(idNum / 144);
+                console.log("idName=" + idName + ", xa=" + xa + ", ya=" + ya);
+                weekColor(xb, xa, yb, ya);
+            });
 
         $(document)
             .mouseup(function () {
                 isMouseDown = false;
             });
         //})
+
     };
 
     //======仮の関数===============================================================================
@@ -274,6 +303,16 @@
             return mySchedule;
         }
         */
+    //週間スケの色付け--------------------------------------------------------------
+    function weekColor(xb, xa, yb, ya) {
+        console.log("weekColor:xb" + xb + " xa" + xa + " yb" + yb + " ya" + ya);
+        for (let i = yb; i < ya + 1; i++) {
+            for (let j = xb; j < xa + 1; j++) {
+                let num = i * 144 + j;
+                $("#weekCell" + num).toggleClass("highlighted");
+            }
+        }
+    }
     //Myスケジュール登録ボタンが押されたときの処理---------------------------------------
     function scheduleSave() {
         scheduleArray = [];
@@ -341,6 +380,15 @@
 
     /*cssはまとめられない*/
     table td.drag {
+        min-width: 30px;
+        min-height: 40px;
+        text-align: center;
+        vertical-align: middle;
+        background-color: #ccc;
+        border: 1px solid #fff;
+    }
+
+    table td.dragWeek {
         min-width: 30px;
         min-height: 40px;
         text-align: center;
@@ -459,6 +507,13 @@
         transform: scale(0, 0);
         transition: 0s;
         opacity: 0.3;
+    }
+
+    /*コンテンツごとの左にバーを出す*/
+    .leftBar {
+        border-left: solid 5px rgb(240, 173, 96);
+        padding-left: 20px;
+        margin-bottom: 40px;
     }
 
     /*#moveScheduleSave {
