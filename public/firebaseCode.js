@@ -70,7 +70,8 @@ function setMySchedule( uid, weekSchedule,mySchedule){
             //ループして全部更新
             for(i = 0;i < 60;i++,index = index + 144){
                 
-                //-------------------------------------------------------------------------
+                //-------------0:× 1:△ 2:〇------------------------------------------------------------
+                //0:変えず×,1:変えず△,2:変えず〇,3:変えて×,4:変えて△,5:変えて〇
                 let day=parseInt(today.getDay());
 
                 for(let j=0;j<144;j++){
@@ -78,16 +79,27 @@ function setMySchedule( uid, weekSchedule,mySchedule){
                     if(sum==0){
                         mySchedule[i*144+j]=0;
                     }
+                    else if(sum==1){
+                        if(mySchedule[i*144+j]==0){
+                            mySchedule[i*144+j]=3;
+                        }
+                        else if(mySchedule[i*144+j]==1){
+                            mySchedule[i*144+j]=4;
+                        }
+                    }
                     else if(sum==2){
                         mySchedule[i*144+j]=1;
                     }
-                    else if(sum==1){
-                        if(mySchedule[i*144+j]==0){
-                            mySchedule[i*144+j]=2;
+                    else if(sum==3){
+                        if(mySchedule[i*144+j]==1){
+                            mySchedule[i*144+j]=4;
                         }
-                        else if(mySchedule[i*144+j]==1){
-                            mySchedule[i*144+j]=3;
+                        else if(mySchedule[i*144+j]==2){
+                            mySchedule[i*144+j]=5;
                         }
+                    }
+                    else if(sum==4){
+                        mySchedule[i*144+j]=2;
                     }
                 }
                 //-------------------------------------------------------------------------
@@ -181,11 +193,14 @@ async function getMySchedule(uid) {
 
             for(let i = 0;i < kari.length;i++){
                 for(let k = 0;k < kari[i].length;k++){
-                    if((kari[i][k])%2==0){
+                    if((kari[i][k])%3==0){
                         returnSchedule[i*144 + k] = 0;
                     }
-                    else{
+                    else if((kari[i][k])%3==1){
                         returnSchedule[i*144 + k] = 1;
+                    }
+                    else if((kari[i][k])%3==2){
+                        returnSchedule[i*144 + k] = 2;
                     }
                 }
             }
@@ -197,4 +212,14 @@ async function getMySchedule(uid) {
 
     console.log(mySchedule);
     return mySchedule;
+}
+
+async function getLoginMemberIndex(uid){
+    let projectId=getParam("project");
+    let memberIndex=await db.collection("project").doc(projectId).collection("projectMemberPeriod").where("memberId","==",uid).get()
+    .then((querySnapshot)=>{
+        return querySnapshot.data()["memberIndex"];
+    })
+
+    return memberIndex;
 }

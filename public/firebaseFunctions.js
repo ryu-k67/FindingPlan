@@ -36,25 +36,41 @@ async function getUserSchedule(userId){
     .where("date", ">=", period[0]).where("date", "<=", period[1]).orderBy("date").get()
     .then(async (querySnapshot)=>{
         let kari = [];
-            kari = await querySnapshot.docs.map((doc) => {
-                let data = doc.data()["mySchedule"];
-                let temp = [];
-                console.log("でーた取得中");
-                //値渡しで日程をコピー
-                for (var k = 0; k < 144; k++) {
-                    temp[k] = data[k];
+        let flag=0;
+        kari = await querySnapshot.docs.map((doc) => {
+            let data = doc.data()["mySchedule"];
+            let day = doc.data()["date"];
+            let temp = [];
+            let m=0;
+            console.log("でーた取得中");
+            //今日以前の穴埋め　（myスケでは削除されているため）
+            if(day>period[0] && flag==0){
+                for(let i=0;i<day-period[0];i++){
+                    for(let j=0;j<144;j++){
+                        temp[i*144+j]=1;
+                    }
                 }
-                return temp;
-            });
-
-            let returnSchedule = [];
-
-            for(let i = 0;i < kari.length;i++){
-                for(let k = 0;k < kari[i].length;k++){
-                    returnSchedule[i*144 + k] = kari[i][k]%2;
-                }
+                m=temp.length;
             }
-            return returnSchedule;
+            //値渡しで日程をコピー
+            for (var k = 0; k < 144; k++,m++) {
+                temp[m] = data[k];
+            }
+            flag=1;
+            return temp;
+        });
+        console.log(kari);
+        let returnSchedule = [];
+        let buff=0;
+        for(let i = 0;i < kari.length;i++){
+            for(let k = 0;k < kari[i].length;k++){
+                returnSchedule[(i+buff)*144 + k] = kari[i][k]%3;
+            }
+            if(i==0){
+                buff=(kari[0].length/144)-1;
+            }
+        }
+        return returnSchedule;
     })
     console.log(projectPeriodMySchedule);
     return projectPeriodMySchedule;
@@ -243,5 +259,37 @@ async function setprojectData(userId,memberName,newSchedule){
        })
         db.collection("project").doc(projectId).collection("projectMemberPeriod").doc(documentId).delete();
         console.log("delete");
+    }
+}
+
+async function pickUp(){
+    /*var projectId = getParam("project");
+    let schedule=await db.collection("project").doc(projectId).get()
+    .then(async(querySnapshot)=>{
+        let temp=await querySnapshot.docs.map((doc)=>{
+            return doc.data()["projectSchedule"];
+        })
+        return temp;
+    })*/
+    let member=getProjectMembers();
+    let schedule=[];
+    for (let i = 0; i < member.length; i++) {
+        var memberSch = await getProjectMemberSchedule(i);
+        schedule[i] = await adjustSchedule(memberSch, i);
+    }
+    let OKschedule=[];
+    let flag;//0:×含む 1:△含む〇 2:全部〇
+    for(let i=0;i<schedule[0].length;i++){
+        flag=2;
+        for(let j=0;j<schedule.length;j++){
+            if(schedule[j][i]%3==1){
+                flag=1;
+            }
+            else if(schedule[j][i]%3==0){
+                flag=0;
+                break;
+            }
+        }
+        OKschedule[i]=flag;
     }
 }
