@@ -217,8 +217,10 @@ async function getMySchedule(uid) {
 async function getLoginMemberIndex(uid){
     let projectId=getParam("project");
     let memberIndex=await db.collection("project").doc(projectId).collection("projectMemberPeriod").where("memberId","==",uid).get()
-    .then((querySnapshot)=>{
-        return querySnapshot.data()["memberIndex"];
+    .then(async (querySnapshot)=>{
+        let index=await querySnapshot.docs.map((doc)=>{
+            return doc.data()["memberIndex"];
+        })
     })
 
     return memberIndex;
