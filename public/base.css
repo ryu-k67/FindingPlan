@@ -1,12 +1,54 @@
+/* スマホ　638px以下 */
+@media only screen and (max-width: 638px){
+
+}
+/* 376px以上 */
+@media only screen and (min-width: 376px), print{
+    .navigation ul {
+        display: flex;
+    } 
+}
+/* 616px以上 */
+@media only screen and (min-width: 616px), print{
+    .selectStatusClass {
+        display: flex;
+    } 
+    .content{
+        padding: 0 2rem;
+        width: 68%;
+    }
+}
+/* pc　638px以上 */
+@media only screen and (min-width: 638px), print{
+    .header{
+        display: flex;
+    }
+
+}
+/* 943px以上 */
+@media only screen and (min-width: 943px), print{
+    .underTable {
+        display: flex;
+    } 
+}
+/* 376px以下 */
+@media only screen and (max-width: 376px){
+    .header{
+        height: 170px;
+    }
+}
 /*================ << header周り >> ================*/
+
 .header {
-    display: flex;
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    height: 80px;
     margin: 0 auto;
     border-bottom: 3px solid rgb(240, 173, 96);
+}
+h1{
+    font-size: 20px;
+    margin: 0; padding: 0;
 }
 .header-title {
     padding: 0;
@@ -21,20 +63,20 @@
     box-sizing: border-box;
 }
 .navigation ul {
-    display: flex;
     justify-content: flex-end;
     list-style: none;
     margin: 3px 0;
 }
 .navigation li {
     margin-right: 5%;
+    margin-bottom: 5px;
 }
 /*================ << mainの表示 >> ================*/
 .content {
     margin: 0 auto;
-    padding: 0 2rem;
+    
     position: relative;
-    width: 68%;
+    
 }
 /*================ << Myページへのボタン >> ================*/
 .mypageBtn {

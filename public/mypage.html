@@ -7,6 +7,7 @@
     <script src="/__/firebase/6.2.0/firebase-firestore.js"></script>
     <script src="/__/firebase/6.2.0/firebase-auth.js"></script>
     <script src="/__/firebase/init.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
     <title>マイページ-Finding Plan</title>
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <link rel="stylesheet" type="text/css" href="base.css" />
@@ -70,14 +71,6 @@
         #weekDragTable {
             height: 463px;
         }
-
-        #selectStatusForm {
-            display: flex;
-        }
-
-        #selectStatusFormWeek {
-            display: flex;
-        }
     </style>
 </head>
 
@@ -88,6 +81,7 @@
         </h1>
         <nav class="navigation">
             <ul class="navigationList">
+                <li><button id="mypage" class="mypageBtn" onclick="mypageClick()">Myページ へ</button></li>
                 <li><button class="btnripple" onclick="logout()">ログアウト</button></li>
             </ul>
         </nav>
@@ -97,7 +91,7 @@
             <p class="del paddingLeft30">
                 <span class="contentTitle">Myスケ</span><span class="guideArea">2ヶ月(60日間)の予定を保存できます.</span>
             </p>
-            <form id="selectStatusForm" class="paddingLeft30">
+            <form id="selectStatusForm" class="paddingLeft30 selectStatusClass">
                 <div class="highlight">
                     <label for="high"><input type="radio" id="high" name="selectStatus" value="HIGHLIGHTED"
                             class="radioH" checked><span class="radioH">行ける</span></label>
@@ -121,7 +115,7 @@
             <p class="del paddingLeft30">
                 <span class="contentTitle">週間スケ</span><span class="guideArea">1週間の定期的な予定を保存できます.</span>
             </p>
-            <form id="selectStatusFormWeek" class="paddingLeft30">
+            <form id="selectStatusFormWeek" class="paddingLeft30 selectStatusClass">
                 <div class="highlight">
                     <label for="highWeek"><input type="radio" id="highWeek" name="selectStatusWeek" value="HIGHLIGHTED"
                             class="radioH" checked><span class="radioH">行ける</span></label>
