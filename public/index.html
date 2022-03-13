@@ -3,209 +3,171 @@
 
 <head>
   <meta charset="utf-8" />
-
-  <!--  -->
   <script src="/__/firebase/6.2.0/firebase-app.js"></script>
   <script src="/__/firebase/6.2.0/firebase-firestore.js"></script>
   <script src="/__/firebase/6.2.0/firebase-auth.js"></script>
   <script src="/__/firebase/init.js"></script>
-
   <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
   <title>ホーム-Finding Plan</title>
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
   <!--<link rel="stylesheet" href="login.css" />-->
+  <link rel="stylesheet" type="text/css" href="base.css" />
   <style>
-    .header-title {
-      width: 100%;
-      padding: 20px 0 10px 0;
-      margin: 0 4%;
-      margin-bottom: 100px;
-      font-size: 40px;
-      /*border-bottom: 1px solid #aaa;*/
-      text-decoration: none;
-      color: rgb(240, 173, 96);
-    }
-
-    .line {
-      border-bottom: 1px solid #aaa;
-    }
-
-    .hide {
-      display: none;
-    }
-
+    /*ログイン中の表示*/
     #info {
       text-align: center;
       font-size: 4em;
       font-weight: bold;
     }
 
-    .content {
-      margin: 0 auto;
-      padding: 0 2rem;
-      position: relative;
-      width: 68%;
-    }
-
-    .mypageBtn {
-      /*矢印の基点とするためrelativeを指定*/
-      position: relative;
-      /*ボタンの形状*/
-      text-decoration: none;
-      display: inline-block;
-      font-size: 1em;
-      background: rgb(240, 173, 96);
-      color: #fff;
-      padding: 10px 40px 10px 30px;
-
-      border-radius: 25px;
-      text-align: center;
-      outline: none;
-      /*アニメーションの指定*/
-      transition: ease .2s;
-
-    }
-
-    /* 矢印が右に移動 */
-    .mypageBtn::after {
-      content: '';
-      /*絶対配置で矢印の位置を決める*/
-      position: absolute;
-      top: 42%;
-      right: 23px;
-      /*矢印の形状*/
-      width: 5px;
-      height: 5px;
-      border-top: 2px solid #fff;
-      border-right: 2px solid #fff;
-      transform: rotate(45deg);
-      /*アニメーションの指定*/
-      transition: all .3s;
-    }
-
-    /*hoverした際の移動*/
-    .mypageBtn:hover::after {
-      right: 13px;
-    }
-
-    /* クリックしたら波紋が広がる */
-    .btnripple {
-      /*波紋の基点とするためrelativeを指定*/
-      position: relative;
-      /*はみ出す波紋を隠す*/
-      overflow: hidden;
-      /*ボタンの形状*/
-      text-decoration: none;
-      display: inline-block;
-      background: rgb(240, 173, 96);
-      color: #fff;
-      padding: 10px 20px;
-      border-radius: 25px;
-      outline: none;
-      font-size: 1em;
-    }
-
-    .btnripple::after {
-      content: "";
-      /*絶対配置で波紋位置を決める*/
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      top: 0;
-      left: 0;
-      /*波紋の形状*/
-      background: radial-gradient(circle, #fff 10%, transparent 10%) no-repeat 50%;
-      transform: scale(10, 10);
-      /*はじめは透過0に*/
-      opacity: 0;
-      /*アニメーションの設定*/
-      transition: transform 0.3s, opacity 1s;
-    }
-
-    /*クリックされたあとの形状の設定*/
-    .btnripple:active::after {
-      transform: scale(0, 0);
-      transition: 0s;
-      opacity: 0.3;
-    }
-
-    input {
-      font-size: 1em;
-      margin: 0.5em;
-      padding: 0.6rem 1rem;
-      width: 100%
-    }
-
-    /*input欄のeffect*/
-    .effect :focus {
-      border: 1px solid rgb(240, 173, 96);
-      outline: none;
-      box-shadow: 0 0 5px 3px rgba(240, 173, 96, .5);
-    }
-
-    #inputarea {
+    /*formを中央揃え*/
+    #inputArea {
       text-align: center;
     }
 
-    table {
+    /*テキストを右に揃える*/
+    .textRight {
+      text-align: right;
+    }
+
+    table#inputArea {
       margin: 0 auto;
       transform: translateX(-3em);
     }
 
-    td {
-      height: 6em;
+    ul {
+      display: flex;
     }
 
-    .text {
-      text-align: right;
+    /*追加*/
+    .headingRow {
+      top: 0;
+    }
+
+    .headingCol span {
+      position: sticky;
+      top: 0;
+      left: 0;
+      /**/
+      background-color: #fff;
+    }
+
+    .openbtn {
+      position: relative;
+      width: 50px;
+      height: 50px;
+    }
+
+    .openbtn span {
+      display: inline-block;
+      transition: all.4s;
+      position: absolute;
+      left: 13px;
+      height: 2px;
+      background-color: #666;
+    }
+
+    .openbtn span:nth-of-type(1) {
+      top: 25px;
+      width: 50%;
+      transform: rotate(90deg);
+    }
+
+    .openbtn span:nth-of-type(2) {
+      top: 25px;
+      width: 50%;
+    }
+
+    .openbtn.active span:nth-of-type(1) {
+      transform: rotate(-45deg);
+      width: 50%;
+    }
+
+    .openbtn.active span:nth-of-type(2) {
+      transform: rotate(45deg);
+      width: 50%;
+    }
+
+    table {
+      width: 92%;
+    }
+
+    table td.drag {
+      min-width: 20px;
+      height: 10px;
+    }
+
+    td {
+      min-width: 20px;
+      height: 10px;
+      text-align: center;
+      vertical-align: middle;
+      border: 1px solid #fff;
+    }
+
+    th {
+      padding: 0 1em;
+    }
+
+    /*保存ボタンの非表示*/
+    .saveHideArea {
+      display: none;
+    }
+
+    ul {
+      display: flex;
+    }
+
+    #selectStatusForm {
+      display: flex;
     }
   </style>
 </head>
 
 <body>
-  <header>
+  <header class="header">
     <h1>
-      <a href="/" class="header-title">Finding Plan</a>
-      <div class="line"></div>
+      <a href="/" class="header-title">Finding&nbsp;Plan</a>
     </h1>
+    <nav class="navigation">
+      <ul class="navigationList">
+        <li><button id="mypage" class="mypageBtn" onclick="mypageClick()">Myページ へ</button></li>
+        <li><button class="btnripple" onclick="logout()">ログアウト</button></li>
+      </ul>
+    </nav>
   </header>
-
+  <!--
   <div class="content">
-    <div id="inputarea">
-      <table>
-        <tr class="effect">
-          <td colspan="2">
-            <button id="mypage" class="mypageBtn" onclick="mypageClick()">Myページ へ</button>
-          </td>
-        </tr>
-        <tr class="effect">
-          <td class="text">
-            <p>プロジェクト名 : </p>
-          </td>
-          <td>
-            <input id="project-name" type="text">
-          </td>
-        </tr>
-        <tr class="effect">
-          <td class="text">
-            <p>プロジェクト開始 : </p>
-          </td>
-          <td>
-            <input id="project-start" type="date">
-          </td>
-        </tr>
-        <tr class="effect">
-          <td class="text">
-            <p>プロジェクト終了 : </p>
-          </td>
-          <td><input id="project-finish" type="date"></td>
-        </tr>
-        <tr>
-          <td colspan="2">
-            <button id="project-make" class="btnripple" onclick="forProject()"> プロジェクトを作成 </button>
-          </td>
-        </tr>
-      </table>
-    </div>
+    <table id="inputArea">
+      <tr class="effect">
+        <td class="textRight">
+          <p>プロジェクト名 : </p>
+        </td>
+        <td>
+          <input id="project-name" type="text">
+        </td>
+      </tr>
+      <tr class="effect">
+        <td class="textRight">
+          <p>プロジェクト開始 : </p>
+        </td>
+        <td>
+          <input id="project-start" type="date">
+        </td>
+      </tr>
+      <tr class="effect">
+        <td class="textRight">
+          <p>プロジェクト終了 : </p>
+        </td>
+        <td><input id="project-finish" type="date"></td>
+      </tr>
+      <tr>
+        <td colspan="2">
+          <button id="project-make" class="btnripple" onclick="forProject()"> プロジェクトを作成 </button>
+        </td>
+      </tr>
+    </table>
+-->
   </div>
   <!-- テキスト表示用 -->
   <p id="info"></p>
@@ -228,7 +190,7 @@
     }
     function loginDisplay() {
       //  logout.classList.remove('hide');
-      inputarea.classList.add('hide');
+      inputArea.classList.add('hideArea');
       //let userName=getUserName(userid);
       info.textContent = "ログイン中です!";
       window.location = "mypage.html";
@@ -249,10 +211,10 @@
       console.log(projectName);
       console.log(projectStartPeriod);
       console.log(projectFinishPeriod);
-      let temp=new Date();
-      let today=new Date(temp.getFullYear(),temp.getMonth(),temp.getDate()).getTime();
-      let start=new Date(projectStartPeriod.split("-",3)).getTime();
-      let finish=new Date(projectFinishPeriod.split("-",3)).getTime();
+      let temp = new Date();
+      let today = new Date(temp.getFullYear(), temp.getMonth(), temp.getDate()).getTime();
+      let start = new Date(projectStartPeriod.split("-", 3)).getTime();
+      let finish = new Date(projectFinishPeriod.split("-", 3)).getTime();
       console.log(today);
       console.log(start);
       console.log(finish);
@@ -268,11 +230,11 @@
         alert("プロジェクトの終了日を入力してください");
         return;
       }
-      else if(start < today){
+      else if (start < today) {
         alert("開始日には本日以降を選択してください");
         return;
       }
-      else if(start > finish){
+      else if (start > finish) {
         alert("終了日は開始日以降を選択してください");
         return;
       }
