@@ -102,10 +102,12 @@ async function getProjectMemberSchedule(memberIndex){
         console.log("データの取得に失敗しました(${error})");
     })
     //console.log(projectSchedule);
-    if(temp.length==0){
+    console.log(temp);
+    console.log(temp.length);
+    /*if(temp.length==0){
         console.log("空");
-        temp=[null];
-    }
+        temp=[[null]];
+    }*/
     console.log(temp);
     return temp[0];
 }
