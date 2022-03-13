@@ -223,5 +223,5 @@ async function getLoginMemberIndex(uid){
         })
     })
 
-    return memberIndex;
+    return null;
 }
