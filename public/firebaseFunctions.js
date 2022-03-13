@@ -373,5 +373,6 @@ async function pickUp(){
             }
         }
     }
+    console.log([resultPerfect,resultAll]);
     return [resultPerfect,resultAll];
 }
