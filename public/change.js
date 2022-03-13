@@ -146,13 +146,13 @@ async function diffSchedule(userId,newSchedule,mySchedule){
         }
         else{
             if(newSchedule[i]==0){
-                diffProjectSchedule[i]=1;
+                diffProjectSchedule[i]=3;
             }
             else if(newSchedule[i]==1){
-                diffProjectSchedule[i]=2;
+                diffProjectSchedule[i]=4;
             }
             else if(newSchedule[i]==2){
-                diffProjectSchedule[i]=3;
+                diffProjectSchedule[i]=5;
             }
         }
     }

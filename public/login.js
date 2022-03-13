@@ -125,3 +125,115 @@ function logoutDisplay() {
 }
 */
 
+//認証状態の確認
+function mypageClick() {
+  firebase.auth().onAuthStateChanged(function (user) {
+    if (user) {
+      userid = firebase.auth().currentUser.uid;
+      loginDisplay();
+    }
+    else {
+      window.location = "login.html";
+    }
+  });
+}
+function loginDisplay() {
+  //  logout.classList.remove('hide');
+  inputarea.classList.add('hide');
+  //let userName=getUserName(userid);
+  info.textContent = "ログイン中です!";
+  window.location = "mypage.html";
+}
+function getUserName(uid) {
+  if (!uid) {
+    uid = firebase.auth().currentUser.uid;
+  }
+  console.log(uid);
+  var userName = db.collection("account").doc(uid).get().data()["name"];
+  return userName;
+}
+
+function forProject() {
+  var projectName = document.getElementById("project-name").value;
+  var projectStartPeriod = document.getElementById("project-start").value;
+  var projectFinishPeriod = document.getElementById("project-finish").value;
+  console.log(projectName);
+  console.log(projectStartPeriod);
+  console.log(projectFinishPeriod);
+  let temp=new Date();
+  let today=new Date(temp.getFullYear(),temp.getMonth(),temp.getDate()).getTime();
+  let start=new Date(projectStartPeriod.split("-",3)).getTime();
+  let finish=new Date(projectFinishPeriod.split("-",3)).getTime();
+  console.log(today);
+  console.log(start);
+  console.log(finish);
+  if (projectName == "") {
+    alert("プロジェクト名を入力してください");
+    return;
+  }
+  else if (projectStartPeriod == "") {
+    alert("プロジェクトの開始日を入力してください");
+    return;
+  }
+  else if (projectFinishPeriod == "") {
+    alert("プロジェクトの終了日を入力してください");
+    return;
+  }
+  else if(start < today){
+    alert("開始日には本日以降を選択してください");
+    return;
+  }
+  else if(start > finish){
+    alert("終了日は開始日以降を選択してください");
+    return;
+  }
+
+  var projectId = getProjectId();
+  let url = "project.html?project=" + projectId;
+  console.log(projectName);
+  console.log(url);
+  createProject(projectName, projectStartPeriod, projectFinishPeriod, projectId, url);
+  console.log("成功");
+  //window.location=url;
+}
+
+function getProjectId() {
+  let collection = db.collection("project");
+  let newProjectId = collection.doc().id;
+  return newProjectId;
+}
+
+//Date型の日付をintの形に変換
+function transDateToInt(date) {
+  var dividDate = date.split("-", 3);
+  /*日時をyyyymmdd(y:年,m:月,d:日)の形に変換*/
+  var intDate = parseInt(dividDate[0] * 10000) + parseInt(dividDate[1] * 100) + parseInt(dividDate[2]);
+  return intDate;
+}
+
+/*プロジェクトを作成する関数.小塚
+*projectName            :String
+*projectStartPeriod     :Date
+*projectEndPeriod       :Date
+*/
+function createProject(projectName, projectStartPeriod, projectEndPeriod, projectId, url) {
+  /*日時をyyyymmdd(y:年,m:月,d:日)の形に変換*/
+  var startTime = transDateToInt(projectStartPeriod);
+  var endTime = transDateToInt(projectEndPeriod);
+  console.log(startTime);
+  console.log(endTime);
+  console.log(projectId);
+  //データベースにドキュメントを更新.決まっていいない値はnullか0
+  db.collection("project").doc(projectId).set({
+    URL: url,
+    memberId: [""],
+    projectName: projectName,
+    projectPeriod: [startTime, endTime],
+    projectDecisionName: 0,
+    projectMemberName: [""]
+  })
+    .then(() => {
+      console.log("seikou");
+      window.location = url;
+    })
+}

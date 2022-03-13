@@ -104,7 +104,7 @@ async function getProjectMemberSchedule(memberIndex){
     //console.log(projectSchedule);
     if(temp.length==0){
         console.log("空");
-        temp=[[null]];
+        temp=[null];
     }
     console.log(temp);
     return temp[0];

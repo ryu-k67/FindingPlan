@@ -240,12 +240,12 @@ async function setprojectData(userId,memberName,newSchedule){
     console.log(memIndex);
     let documentId=db.collection("project").doc(projectId).collection("projectMemberPeriod").doc().id;
 
-    db.collection("project").doc(projectId).collection("projectMemberPeriod").add({
-        memberId: userId,
+    db.collection("project").doc(projectId).collection("projectMemberPeriod").doc(documentId).set({
+        memberId:userId,
         projectSchedule:newSchedule,
         memberIndex:memIndex
     })
-    .then(function() {
+    .then(function(){ 
         console.log("newSchedule successfully written!");
     })
     .catch(function(error) {
@@ -260,21 +260,26 @@ async function setprojectData(userId,memberName,newSchedule){
        .catch((error)=>{
            console.log("データの取得失敗");
        })
-        db.collection("project").doc(projectId).collection("projectMemberPeriod").doc(documentId).delete();
+        //db.collection("project").doc(projectId).collection("projectMemberPeriod").doc(documentId).delete();
         console.log("delete");
     }
 }
 
 async function pickUp(){
     
-    let member=getProjectMembers();
+    let member=await getProjectMembers();
+    console.log(member);
     let schedule=[];
+    if(member[0]==""){
+        return [null];
+    }
     for (let i = 0; i < member.length; i++) {
         var memberSch = await getProjectMemberSchedule(i);
         schedule[i] = await adjustSchedule(memberSch, i);
     }
     let OKschedule=[];
     let flag;//0:×含む 1:△含む〇 2:全部〇
+    console.log(schedule);
     for(let i=0;i<schedule[0].length;i++){
         flag=2;
         for(let j=0;j<schedule.length;j++){
@@ -295,7 +300,7 @@ async function pickUp(){
     let dayOfWeekStr=["日","月","火","水","木","金","土"];
     let time="";
     for(let i=0;i<OKschedule.length/144;i++){
-        let month=start.getMonth();
+        let month=start.getMonth()+1;
         let day=start.getDate();
         let dayOfWeek=start.getDay();
         let dayStr=month+"/"+day+"("+dayOfWeekStr[dayOfWeek]+")";
@@ -309,10 +314,10 @@ async function pickUp(){
                 }
 
                 if(j/6>=10){
-                    time=j/6+":"+j%6+"0~";
+                    time=Math.floor(j/6)+":"+j%6+"0~";
                 }
                 else{
-                    time="0"+j/6+":"+j%6+"0~";
+                    time="0"+Math.floor(j/6)+":"+j%6+"0~";
                 }
                 
                 if(OKschedule[i*144+j]==1){
@@ -322,6 +327,7 @@ async function pickUp(){
                 else if(OKschedule[i*144+j]==2){
                     flag=2;
                     resultPerfect+=dayStr+time;
+                    resultAll+=dayStr+time;
                 }
             }
             //△の連続が終了したら
@@ -331,11 +337,11 @@ async function pickUp(){
                     continue;
                 }
 
-                if((j+1)/6>=10){
-                    time=(j+1)/6+":"+(j+1)%6+"0";
+                if(j/6>=10){
+                    time=Math.floor(j/6)+":"+j%6+"0";
                 }
                 else{
-                    time="0"+(j+1)/6+":"+(j+1)%6+"0";
+                    time="0"+Math.floor(j/6)+":"+j%6+"0";
                 }
                 
                 if(OKschedule[i*144+j]==0){
@@ -355,11 +361,11 @@ async function pickUp(){
                     continue;
                 }
 
-                if((j+1)/6>=10){
-                    time=(j+1)/6+":"+(j+1)%6+"0";
+                if(j/6>=10){
+                    time=Math.floor(j/6)+":"+j%6+"0";
                 }
                 else{
-                    time="0"+(j+1)/6+":"+(j+1)%6+"0";
+                    time="0"+Math.floor(j/6)+":"+j%6+"0";
                 }
                 
                 if(OKschedule[i*144+j]==0){
@@ -370,7 +376,7 @@ async function pickUp(){
                 else if(OKschedule[i*144+j]==1){
                     flag=1;
                     resultPerfect+=time+"\n";
-                    //resultAll+=dayStr+time+"~";
+                    resultAll+=dayStr+time+"~";
                 }
             }
         }

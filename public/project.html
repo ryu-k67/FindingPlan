@@ -194,7 +194,18 @@
     //--------------------------------
     //テーブル作成------------------------------------------------------
     //状況の取得------------------------
-
+    function confirm(){
+        //認証状態の確認
+        firebase.auth().onAuthStateChanged(async function (user) {
+            if (user) {
+                userId = firebase.auth().currentUser.uid;
+                console.log(userId);
+                loginMemberIndex = await getLoginMemberIndex(userId);
+            }
+            console.log(loginMemberIndex);
+        });
+        return loginMemberIndex;
+    }
     document.addEventListener('DOMContentLoaded', async (event) => {
         let projectName = await getProjectName();
         console.log(projectName);
@@ -220,27 +231,26 @@
             }
         }
         //認証状態の確認
-        firebase.auth().onAuthStateChanged(async function (user) {
-            if (user) {
-                userId = firebase.auth().currentUser.uid;
-                console.log(userId);
-            }
-            loginMemberIndex = await getLoginMemberIndex(userId);
-        });
+        loginMemberIndex=confirm();
         //それぞれのメンバーの行--------------
         memberName = await getProjectMembers();
         console.log(memberName);
         console.log("memberName.length : " + memberName.length);
         console.log("memberIndex:" + loginMemberIndex);
+        //pickUp();
+        
         for (let i = 0; i < memberName.length; i++) {
+            console.log(loginMemberIndex);
             var memberSch = await getProjectMemberSchedule(i);
             console.log(memberSch);
-            if (memberSch == undefined) {
+            if (memberSch == undefined || memberSch == null) {
+                console.log(loginMemberIndex);
                 break;
             }
             var memberRow = await adjustSchedule(memberSch, i);
             var tableRow = $("<tr></tr>").appendTo(tableTag);
             var count = 0;
+            console.log(loginMemberIndex);
             if (i == loginMemberIndex) {
                 //ログインした人のための処理----------
                 console.log("ログインした人のための処理");
@@ -270,7 +280,7 @@
                 for (let j = new Date(start); j <= finish; j.setDate(j.getDate() + 1)) {
                     for (let k = 0; k < 144; k++) {
                         if ((memberRow[count] % 3) == 0) {
-                            $("<td class=\"notHighlight\"></td>").appendTo(tableRow);
+                            $("<td class=\"notHighlighted\"></td>").appendTo(tableRow);
                         } else if ((memberRow[count] % 3) == 2) {
                             $("<td class=\"highlighted\"></td>").appendTo(tableRow);
                         } else if ((memberRow[count] % 3) == 1) {
@@ -284,12 +294,15 @@
             console.log(memberRow);
 
         }
-        if (loginMemberIndex === null) {
+        console.log(loginMemberIndex);
+        if (loginMemberIndex == null || loginMemberIndex==[]) {
             //新規欄-----------------------------------------------------------
             var tableRow = $("<tr></tr>").appendTo(tableTag);
             var plusCellbox = $("<th id=\"plusCellbox\" class=\"headingRow\"></th>").appendTo(tableRow);
+            console.log("unregister");
             unregistered();
         } else {
+            console.log("register");
             registered();
         }
         async function registered() {
@@ -541,7 +554,7 @@
             //ログインしてない人のための処理-------
             setJoinMember(unLoginUserName, scheduleArray);
         }
-        pickUp();
+        //pickUp();
     }
     //--------------------------------------------------------
     async function getProjectPeriod() {
@@ -743,122 +756,6 @@
     }
 */
 </script>
-<style>
-    /*high*/
-input.radioH {
-    appearance: none;
-    position: absolute;
-}
-span.radioH{
-    position: relative;
-    display: flex;
-    align-items: center;
-    padding-right: 6px;
-}
-span.radioH::before {
-    content: '';
-    display: block;
-    border-radius: 18px;
-    border: 5px solid rgb(238, 187, 129);
-    width: 17px;
-    height: 17px;
-    background-color: #fff;
-}
-  
-input.radioH:checked+span.radioH::after{
-    content: '';
-    position: absolute;
-    left: 8.5px;
-    display: block;
-    /* border-radius: 50%; */
-    border-radius: 5px;
-    width: 10px;
-    height: 10px;
-    background-color: rgb(238, 187, 129);
-}
-.highlight {
-    background-color: rgb(238, 187, 129);
-    /* background-color: rgb(240, 173, 96); */
-    padding: 4px; 
-    border-radius:  15px;
-    margin-right: 6px;
-}
-/*middle*/
-input.radioM {
-    appearance: none;
-    position: absolute;
-}
-span.radioM{
-    position: relative;
-    display: flex;
-    align-items: center;
-    padding-right: 6px;
-}
-span.radioM::before {
-    content: '';
-    display: block;
-    border-radius: 18px;
-    border: 5px solid rgb(232, 238, 147);
-    width: 17px;
-    height: 17px;
-    background-color: #fff;
-}
-  
-input.radioM:checked+span.radioM::after{
-    content: '';
-    position: absolute;
-    left: 8.5px;
-    display: block;
-    border-radius: 5px;
-    width: 10px;
-    height: 10px;
-    background-color:rgb(232, 238, 147);
-}
-.middlelight {
-    background-color: rgb(232, 238, 147);
-    /* background-color: rgb(216, 223, 126); */
-    padding: 4px; 
-    border-radius: 15px;
-    margin-right: 6px;
-}
-/*not*/
-input.radioN {
-    appearance: none;
-    position: absolute;
-}
-span.radioN{
-    position: relative;
-    display: flex;
-    align-items: center;
-    padding-right: 6px;
-}
-span.radioN::before {
-    content: '';
-    display: block;
-    border-radius: 18px;
-    border: 5px solid rgb(223, 223, 223);
-    width: 17px;
-    height: 17px;
-    background-color: #fff;
-}
-  
-input.radioN:checked+span.radioN::after{
-    content: '';
-    position: absolute;
-    left: 8.5px;
-    display: block;
-    border-radius: 5px;
-    width: 10px;
-    height: 10px;
-    background-color:rgb(223, 223, 223);
-}
-.notHighlight {
-    background-color: rgb(223, 223, 223);
-    /* background-color: #ccc; */
-    padding: 4px; 
-    border-radius: 15px;
-    margin-right: 6px;
-}
-</style>
+
 
 </html>
