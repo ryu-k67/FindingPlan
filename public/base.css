@@ -1,0 +1,338 @@
+/*================ << header周り >> ================*/
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    height: 80px;
+    margin: 0 auto;
+    border-bottom: 3px solid rgb(240, 173, 96);
+}
+.header-title {
+    padding: 0;
+    margin: 0 4%;
+    font-size: 40px;
+    text-decoration: none;
+    color: rgb(240, 173, 96);
+}
+.navigation {
+    width: 100%;
+    height: 60px;
+    box-sizing: border-box;
+}
+.navigation ul {
+    display: flex;
+    justify-content: flex-end;
+    list-style: none;
+    margin: 3px 0;
+}
+.navigation li {
+    margin-right: 5%;
+}
+/*================ << mainの表示 >> ================*/
+.content {
+    margin: 0 auto;
+    padding: 0 2rem;
+    position: relative;
+    width: 68%;
+}
+/*================ << Myページへのボタン >> ================*/
+.mypageBtn {
+    /*矢印の基点とするためrelativeを指定*/
+    position: relative;
+    /*ボタンの形状*/
+    text-decoration: none;
+    display: inline-block;
+    font-size: 1em;
+    background: rgb(240, 173, 96);
+    color: #fff;
+    padding: 10px 40px 10px 30px;
+    border-radius: 25px;
+    text-align: center;
+    outline: none;
+    /*アニメーションの指定*/
+    transition: ease .2s;
+}
+/* 矢印が右に移動 */
+.mypageBtn::after {
+    content: '';
+    /*絶対配置で矢印の位置を決める*/
+    position: absolute;
+    top: 42%;
+    right: 23px;
+    /*矢印の形状*/
+    width: 5px;
+    height: 5px;
+    border-top: 2px solid #fff;
+    border-right: 2px solid #fff;
+    transform: rotate(45deg);
+    /*アニメーションの指定*/
+    transition: all .3s;
+}
+/*hoverした際の移動*/
+.mypageBtn:hover::after {
+    right: 13px;
+}
+/*================ << クリックしたら波紋が広がる >> ================*/
+.btnripple {
+    /*波紋の基点とするためrelativeを指定*/
+    position: relative;
+    /*はみ出す波紋を隠す*/
+    overflow: hidden;
+    /*ボタンの形状*/
+    text-decoration: none;
+    display: inline-block;
+    background: rgb(240, 173, 96);
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 25px;
+    outline: none;
+    font-size: 1em;
+}
+.btnripple::after {
+    content: "";
+    /*絶対配置で波紋位置を決める*/
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    /*波紋の形状*/
+    background: radial-gradient(circle, #fff 10%, transparent 10%) no-repeat 50%;
+    transform: scale(10, 10);
+    /*はじめは透過0に*/
+    opacity: 0;
+    /*アニメーションの設定*/
+    transition: transform 0.3s, opacity 1s;
+}
+/*クリックされたあとの形状の設定*/
+.btnripple:active::after {
+    transform: scale(0, 0);
+    transition: 0s;
+    opacity: 0.3;
+}
+/*================ << 入力欄 >> ================*/
+input[type="text"] {
+    font-size: 1em;
+    margin: 0.5em;
+    padding: 0.6rem 1rem;
+    width: 100%
+}
+/*================ << input欄のeffect >> ================*/
+.effect :focus {
+    border: 1px solid rgb(240, 173, 96);
+    outline: none;
+    box-shadow: 0 0 5px 3px rgba(240, 173, 96, .5);
+}
+/*================ << 非表示 >> ================*/
+.hideArea {
+    display: none;
+}
+/*================ << 表の見出し >> ================*/
+.doubleHeading {
+    position: sticky;
+    top: 0;
+    left: 0;
+    background-color: #fff;
+    z-index: 2;
+}
+.headingRow {
+    position: sticky;
+    left: 0;
+    background-color: #fff;
+    padding: 0 1em;
+    z-index: 1;
+}
+.headingCol {
+    position: sticky;
+    top: 0;
+    background-color: #fff;
+    z-index: 1;
+}
+.doubleHeading ::before,
+.headingRow ::before,
+.headingCol ::before {
+    content: "";
+    position: absolute;
+    top: -1px;
+    left: -1px;
+    width: 100%;
+    height: 100%;
+}
+/*================ << guideArea使い方ガイドの文を書く >> ================*/
+.guideArea {
+    color: rgb(139, 139, 139);
+    padding-left: 1em;
+}
+/*================ << selectStatusのため >> ================*/
+form {
+    margin-bottom: 0.7em;
+}
+/*high*/
+input.radioH {
+    appearance: none;
+    position: absolute;
+}
+span.radioH{
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding-right: 6px;
+}
+span.radioH::before {
+    content: '';
+    display: block;
+    border-radius: 18px;
+    border: 5px solid rgb(238, 187, 129);
+    width: 17px;
+    height: 17px;
+    background-color: #fff;
+}
+  
+input.radioH:checked+span.radioH::after{
+    content: '';
+    position: absolute;
+    left: 8px;
+    display: block;
+    /* border-radius: 50%; */
+    border-radius: 5px;
+    width: 11px;
+    height: 11px;
+    background-color: rgb(238, 187, 129);
+}
+.highlight {
+    background-color: rgb(238, 187, 129);
+    /* background-color: rgb(240, 173, 96); */
+    padding: 4px; 
+    border-radius:  15px;
+    margin-right: 6px;
+}
+/*middle*/
+input.radioM {
+    appearance: none;
+    position: absolute;
+}
+span.radioM{
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding-right: 6px;
+}
+span.radioM::before {
+    content: '';
+    display: block;
+    border-radius: 18px;
+    border: 5px solid rgb(232, 238, 147);
+    width: 17px;
+    height: 17px;
+    background-color: #fff;
+}
+  
+input.radioM:checked+span.radioM::after{
+    content: '';
+    position: absolute;
+    left: 8px;
+    display: block;
+    border-radius: 5px;
+    width: 11px;
+    height: 11px;
+    background-color:rgb(232, 238, 147);
+}
+.middlelight {
+    background-color: rgb(232, 238, 147);
+    /* background-color: rgb(216, 223, 126); */
+    padding: 4px; 
+    border-radius: 15px;
+    margin-right: 6px;
+}
+/*not*/
+input.radioN {
+    appearance: none;
+    position: absolute;
+}
+span.radioN{
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding-right: 6px;
+}
+span.radioN::before {
+    content: '';
+    display: block;
+    border-radius: 18px;
+    border: 5px solid rgb(223, 223, 223);
+    width: 17px;
+    height: 17px;
+    background-color: #fff;
+}
+  
+input.radioN:checked+span.radioN::after{
+    content: '';
+    position: absolute;
+    left: 8px;
+    display: block;
+    border-radius: 5px;
+    width: 11px;
+    height: 11px;
+    background-color:rgb(223, 223, 223);
+}
+.notHighlight {
+    background-color: rgb(223, 223, 223);
+    /* background-color: #ccc; */
+    padding: 4px; 
+    border-radius: 15px;
+    margin-right: 6px;
+}
+
+
+/*================ << dragTableの基本設定 >> ================*/
+
+table.dragArea {
+    display: block;
+    overflow-x: scroll;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+    border: 3px #666 solid;
+    border-radius: 15px; 
+}
+table td.drag {
+    text-align: center;
+    vertical-align: middle;
+    background-color: #ccc;
+    border: 1px solid #fff;
+}
+
+th {
+    text-align: left;
+    border: 0.5px solid black;
+    background-color: #fff;
+}
+
+table td.notHighlight {
+    background-color: #ccc;
+}
+
+table td.middlelighted {
+    background-color: rgb(216, 223, 126);
+}
+
+table td.highlighted {
+    background-color: rgb(240, 173, 96);
+}
+.time {
+    padding-left: 1em;
+}
+/*================ << コンテンツのタイトル >> ================*/
+.contentTitle {
+    font-size: 40px;
+}
+.del {
+    padding: 0 0;
+    margin: 0px 0px;
+}
+.paddingLeft30{
+    padding-left:30px;
+}
+.left30{
+    left:30px;
+}
