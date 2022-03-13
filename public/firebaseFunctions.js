@@ -22,6 +22,9 @@ function getParam(name, url) {
 
 /*あるプロジェクトの期間のあるユーザーのマイスケジュールを返す*/
 async function getUserSchedule(userId){
+    if(userId==null){
+        return null;
+    }
     /*あるプロジェクトIDのプロジェクトの開始日、終了日を取得する*/
     var projectId = getParam("project");
     var period = [];
@@ -290,7 +293,6 @@ async function pickUp(){
     let resultAll="";//△含む
     let start=await getProjectPeriodStart();
     let dayOfWeekStr=["日","月","火","水","木","金","土"];
-    let flag;
     let time="";
     for(let i=0;i<OKschedule.length/144;i++){
         let month=start.getMonth();

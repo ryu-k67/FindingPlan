@@ -743,6 +743,122 @@
     }
 */
 </script>
-
+<style>
+    /*high*/
+input.radioH {
+    appearance: none;
+    position: absolute;
+}
+span.radioH{
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding-right: 6px;
+}
+span.radioH::before {
+    content: '';
+    display: block;
+    border-radius: 18px;
+    border: 5px solid rgb(238, 187, 129);
+    width: 17px;
+    height: 17px;
+    background-color: #fff;
+}
+  
+input.radioH:checked+span.radioH::after{
+    content: '';
+    position: absolute;
+    left: 8.5px;
+    display: block;
+    /* border-radius: 50%; */
+    border-radius: 5px;
+    width: 10px;
+    height: 10px;
+    background-color: rgb(238, 187, 129);
+}
+.highlight {
+    background-color: rgb(238, 187, 129);
+    /* background-color: rgb(240, 173, 96); */
+    padding: 4px; 
+    border-radius:  15px;
+    margin-right: 6px;
+}
+/*middle*/
+input.radioM {
+    appearance: none;
+    position: absolute;
+}
+span.radioM{
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding-right: 6px;
+}
+span.radioM::before {
+    content: '';
+    display: block;
+    border-radius: 18px;
+    border: 5px solid rgb(232, 238, 147);
+    width: 17px;
+    height: 17px;
+    background-color: #fff;
+}
+  
+input.radioM:checked+span.radioM::after{
+    content: '';
+    position: absolute;
+    left: 8.5px;
+    display: block;
+    border-radius: 5px;
+    width: 10px;
+    height: 10px;
+    background-color:rgb(232, 238, 147);
+}
+.middlelight {
+    background-color: rgb(232, 238, 147);
+    /* background-color: rgb(216, 223, 126); */
+    padding: 4px; 
+    border-radius: 15px;
+    margin-right: 6px;
+}
+/*not*/
+input.radioN {
+    appearance: none;
+    position: absolute;
+}
+span.radioN{
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding-right: 6px;
+}
+span.radioN::before {
+    content: '';
+    display: block;
+    border-radius: 18px;
+    border: 5px solid rgb(223, 223, 223);
+    width: 17px;
+    height: 17px;
+    background-color: #fff;
+}
+  
+input.radioN:checked+span.radioN::after{
+    content: '';
+    position: absolute;
+    left: 8.5px;
+    display: block;
+    border-radius: 5px;
+    width: 10px;
+    height: 10px;
+    background-color:rgb(223, 223, 223);
+}
+.notHighlight {
+    background-color: rgb(223, 223, 223);
+    /* background-color: #ccc; */
+    padding: 4px; 
+    border-radius: 15px;
+    margin-right: 6px;
+}
+</style>
 
 </html>
