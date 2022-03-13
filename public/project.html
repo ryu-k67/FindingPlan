@@ -110,9 +110,7 @@
         </nav>
     </header>
     <div class="content">
-
         <p id="innerName" class="contentTitle del paddingLeft30"></p>
-
         <!-- コピー対象要素とコピーボタン -->
         <button class="btnripple left30" onclick="copyToClipboard()" style="margin-bottom: 0.7em;">URLをコピー</button>
         <form id="selectStatusForm" class="paddingLeft30">
@@ -136,16 +134,16 @@
         <ul>
             <ui>
                 <div class="hideArea">
-                    <div class="guideArea">
-                        <p>[2-1]ログインする方は下のボタンを押してください.</p>
+                    <div class="guideArea del">
+                        <p class="del">[2-1]ログインする方は下のボタンを押してください.</p>
                     </div>
-                    <button id="login" class="btnripple" onclick="onClickLogin()">ログイン</button>
+                    <button id="login" class="btnripple left30" onclick="onClickLogin()">ログイン</button>
                 </div>
             </ui>
             <ui style="padding: 0 1em;">
                 <div class="hideArea">
-                    <div class="guideArea">
-                        <p>[2-2]ログインしない方は下の入力欄に入力してください.</p>
+                    <div class="guideArea del">
+                        <p class="del">[2-2]ログインしない方は下の入力欄に入力してください.</p>
                     </div>
                     <label class="effect">
                         <input id="unLoginUserName" type="text" placeholder="名前を入力し, Enterを押してください."
@@ -155,16 +153,16 @@
             </ui>
         </ul>
         <div class="saveHideArea">
-            <ul>
-                <ui>
+            <ul class="del">
+                <ui class="del">
                     <button id="scheduleSaveButton" class="btnripple"
                         onclick="scheduleSave()"><span>スケジュールを保存</span></button>
                 </ui>
-                <ui>
-                    <div class="guideArea">
-                        <p>[3]ドラック&ドロップで可能な時間をオレンジ, 不可能な時間を灰色にしてください.</p>
-                        <p>[4]スケジュールを保存ボタンを押してください.</p>
-                        <p>[5]URLをコピーを押して,プロジェクトメンバーに共有してください.</p>
+                <ui class="del">
+                    <div class="guideArea paddingLeft30">
+                        <p class="paddingLeft30 del">[3]ドラック&ドロップで可能な時間をオレンジ, 不可能な時間を灰色にしてください.</p>
+                        <p class="paddingLeft30 del ">[4]スケジュールを保存ボタンを押してください.</p>
+                        <p class="paddingLeft30 del ">[5]URLをコピーを押して,プロジェクトメンバーに共有してください.</p>
                     </div>
                 </ui>
             </ul>
@@ -203,7 +201,7 @@
         //開始日と終了日の取得----------------
         finish = await getProjectPeriodFinish();
         start = await getProjectPeriodStart();
-        var tableTag = $("<table id=\"dragTable\" cellpadding=\"0\" cellspacing=\"0\">");
+        var tableTag = $("<table id=\"dragTable\" class=\"dragArea\" cellpadding=\"0\" cellspacing=\"0\">");
 
         //1行目の作成-----------------------
         var tableFirstRow = $("<tr></tr>").appendTo(tableTag);
@@ -500,7 +498,9 @@
                     $("#modalOpen").hide();
                     $("<p>" + unLoginUserName + "</p>").appendTo($("#plusCellbox"));
                     //$("#plusCellbox").outerWidth();
-                    $(".headingCol").css("left", plusCellbox.outerWidth() + "px");
+
+                    //テーブルのサイズ調整----------------
+                    $(".headingCol span").css("left", plusCellbox.outerWidth() + 10 + "px");
                     //$(".headiing");
                     //saveButtonを表示-----------------
                     $(".saveHideArea").show();
