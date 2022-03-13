@@ -263,14 +263,7 @@ async function setprojectData(userId,memberName,newSchedule){
 }
 
 async function pickUp(){
-    /*var projectId = getParam("project");
-    let schedule=await db.collection("project").doc(projectId).get()
-    .then(async(querySnapshot)=>{
-        let temp=await querySnapshot.docs.map((doc)=>{
-            return doc.data()["projectSchedule"];
-        })
-        return temp;
-    })*/
+    
     let member=getProjectMembers();
     let schedule=[];
     for (let i = 0; i < member.length; i++) {
@@ -292,4 +285,93 @@ async function pickUp(){
         }
         OKschedule[i]=flag;
     }
+
+    let resultPerfect="";//〇だけ
+    let resultAll="";//△含む
+    let start=await getProjectPeriodStart();
+    let dayOfWeekStr=["日","月","火","水","木","金","土"];
+    let flag;
+    let time="";
+    for(let i=0;i<OKschedule.length/144;i++){
+        let month=start.getMonth();
+        let day=start.getDate();
+        let dayOfWeek=start.getDay();
+        let dayStr=month+"/"+day+"("+dayOfWeekStr[dayOfWeek]+")";
+        flag=0;
+        for(let j=0;j<144;j++){
+            //時間の始まり
+            if(flag==0){
+                if(OKschedule[i*144+j]==0){
+                    flag=0;
+                    continue;
+                }
+
+                if(j/6>=10){
+                    time=j/6+":"+j%6+"0~";
+                }
+                else{
+                    time="0"+j/6+":"+j%6+"0~";
+                }
+                
+                if(OKschedule[i*144+j]==1){
+                    flag=1;
+                    resultAll+=dayStr+time;
+                }
+                else if(OKschedule[i*144+j]==2){
+                    flag=2;
+                    resultPerfect+=dayStr+time;
+                }
+            }
+            //△の連続が終了したら
+            else if(flag==1){
+                if(OKschedule[i*144+j]==1){
+                    flag=1;
+                    continue;
+                }
+
+                if((j+1)/6>=10){
+                    time=(j+1)/6+":"+(j+1)%6+"0";
+                }
+                else{
+                    time="0"+(j+1)/6+":"+(j+1)%6+"0";
+                }
+                
+                if(OKschedule[i*144+j]==0){
+                    flag=0;
+                    resultAll+=time+"\n";
+                }
+                else if(OKschedule[i*144+j]==2){
+                    flag=2;
+                    //resultAll+=time+"\n";
+                    resultPerfect+=dayStr+time+"~";
+                }
+            }
+            //〇の連続が終了したら
+            else if(flag==2){
+                if(OKschedule[i*144+j]==2){
+                    flag=2;
+                    continue;
+                }
+
+                if((j+1)/6>=10){
+                    time=(j+1)/6+":"+(j+1)%6+"0";
+                }
+                else{
+                    time="0"+(j+1)/6+":"+(j+1)%6+"0";
+                }
+                
+                if(OKschedule[i*144+j]==0){
+                    flag=0;
+                    resultPerfect+=time+"\n";
+                    resultAll+=time+"\n";
+                }
+                else if(OKschedule[i*144+j]==1){
+                    flag=1;
+                    resultPerfect+=time+"\n";
+                    //resultAll+=dayStr+time+"~";
+                }
+            }
+        }
+    }
+    return [resultPerfect,resultAll];
 }

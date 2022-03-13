@@ -221,6 +221,7 @@ async function getLoginMemberIndex(uid){
         let index=await querySnapshot.docs.map((doc)=>{
             return doc.data()["memberIndex"];
         })
+        return index;
     })
 
     return memberIndex;
