@@ -105,6 +105,8 @@
         <p id="innerName" class="contentTitle del paddingLeft30"></p>
         <!-- コピー対象要素とコピーボタン -->
         <button class="btnripple left30" onclick="copyToClipboard()" style="margin-bottom: 0.7em;">URLをコピー</button>
+        <button class="btnPickUp" onclick="clickPickUp()" style="margin-bottom: 0.7em;">ピックアップ</button>
+
         <form id="selectStatusForm" class="paddingLeft30 selectStatusClass">
             <div class="highlight">
                 <label for="high"><input type="radio" id="high" name="selectStatus" value="HIGHLIGHTED" class="radioH"
@@ -161,6 +163,10 @@
             </ul>
         </div>
 
+        <div id="pickUpTableArea">
+            <table id="pickUpTable" cellpadding="0" cellspacing="0"></table>
+        </div>
+
     </div>
 
 </body>
@@ -180,6 +186,7 @@
     var finish;
     var memberName;
     var userSchedule;
+    var schedule;//ピックアップ用
     //ログインした人のmemberIndex-------
     var loginMemberIndex = null;
     //--------------------------------
@@ -228,7 +235,6 @@
         console.log(memberName);
         console.log("memberName.length : " + memberName.length);
         console.log("memberIndex:" + loginMemberIndex);
-        //pickUp();
         
         for (let i = 0; i < memberName.length; i++) {
             console.log(loginMemberIndex);
@@ -245,7 +251,7 @@
             if (i == loginMemberIndex) {
                 //ログインした人のための処理----------
                 console.log("ログインした人のための処理");
-                $("<th class=\"headingRow\" ><p>" + memberName[i] + "</p></th>").appendTo(tableRow);
+                $("<th class=\"headingRow\" ><p><input type=\"checkbox\" id="+"checkBox_"+i+" checked>" + memberName[i] + "</p></th>").appendTo(tableRow);
                 console.log("error前のuserId" + userId);
                 console.log("error前のloginMemberIndex" + loginMemberIndex);
                 userSchedule = await getUserSchedule(userId);
@@ -267,7 +273,7 @@
                 $(".firstGuide").hide();
             } else {
                 console.log("ログインしてない人のための処理");
-                $("<th class=\"headingRow\" >" + memberName[i] + "</th>").appendTo(tableRow);
+                $("<th class=\"headingRow\" ><input type=\"checkbox\" id="+"checkBox_"+i+" checked>" + memberName[i] + "</th>").appendTo(tableRow);
                 for (let j = new Date(start); j <= finish; j.setDate(j.getDate() + 1)) {
                     for (let k = 0; k < 144; k++) {
                         if ((memberRow[count] % 3) == 0) {
@@ -515,8 +521,38 @@
                 }
             }
         }
+
+        
+        schedule=await pickUp();
+        console.log(schedule);
+        if(schedule[0]!=null){
+            clickPickUp();
+        }
         console.log("作成完了");
+
     });
+    //-----------------------------------------------------
+    async function clickPickUp(){
+        let pickUpSchedule=await pick(schedule);
+        let table = document.getElementById("pickUpTable");
+        console.log(table.rows.length);
+        if(table.rows.length>=1){
+            console.log("1");
+            table.deleteRow(0);
+            console.log(table.rows.length);
+            table.deleteRow(0);
+            console.log(table.rows.length);
+        }
+        //テーブルの作成
+        let tableRowOne=$("<tr></tr>").appendTo(table);
+        $("<th><p><span>" + "参加可能日のみ" + "</span></p></th>").appendTo(tableRowOne);
+        $("<th><p><span>" + "未確定を含む" + "</span></p></th>").appendTo(tableRowOne);
+
+        let tableRowTwo=$("<tr></tr>").appendTo(table);
+        $("<td><p><span style=\"white-space: pre-line\">" + pickUpSchedule[0] + "</span></p></td>").appendTo(tableRowTwo);
+        $("<td><p><span style=\"white-space: pre-line\">" + pickUpSchedule[1] + "</span></p></td></table>").appendTo(tableRowTwo);
+        
+    }
     //----------------------------------------------------
     function scheduleSave() {
         console.log("scheduleSave()");
