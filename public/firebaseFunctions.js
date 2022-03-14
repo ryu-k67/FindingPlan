@@ -277,12 +277,32 @@ async function pickUp(){
         var memberSch = await getProjectMemberSchedule(i);
         schedule[i] = await adjustSchedule(memberSch, i);
     }
+    return schedule;
+}
+async function pick(schedule){
+    let check=[];
+    console.log(memberName);
+    if(memberName[0]==""){
+        console.log("a");
+        return null;
+    }
+    for(let i=0;i<memberName.length;i++){
+        let idName="checkBox_"+i;
+        let element=document.getElementById(idName);
+        console.log(element);
+        check[i]=element.checked;
+    }
+    console.log(check);
     let OKschedule=[];
     let flag;//0:×含む 1:△含む〇 2:全部〇
     console.log(schedule);
     for(let i=0;i<schedule[0].length;i++){
+        
         flag=2;
         for(let j=0;j<schedule.length;j++){
+            if(check[j]==false){
+                continue;
+            }
             if(schedule[j][i]%3==1){
                 flag=1;
             }
@@ -376,7 +396,7 @@ async function pickUp(){
                 else if(OKschedule[i*144+j]==1){
                     flag=1;
                     resultPerfect+=time+"\n";
-                    resultAll+=dayStr+time+"~";
+                    //resultAll+=dayStr+time+"~";
                 }
             }
         }
