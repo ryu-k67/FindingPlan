@@ -30,12 +30,7 @@
             border: 1px solid #ccc;
         }
 
-        /*コンテンツごとの左にバーを出す*/
-        .leftBar {
-            border-left: solid 5px rgb(240, 173, 96);
-            padding-left: 20px;
-            margin: 20px 0;
-        }
+
 
         table {
             height: 480px;
@@ -71,6 +66,19 @@
         #weekDragTable {
             height: 463px;
         }
+
+        /* 616px以上 */
+        @media only screen and (min-width: 616px),
+        print {
+            .selectStatusClass {
+                display: flex;
+            }
+
+            .content {
+                padding: 0 2rem;
+                width: 68%;
+            }
+        }
     </style>
 </head>
 
@@ -94,7 +102,7 @@
             <form id="selectStatusForm" class="paddingLeft30 selectStatusClass">
                 <div class="highlight">
                     <label for="high"><input type="radio" id="high" name="selectStatus" value="HIGHLIGHTED"
-                            class="radioH" checked><span class="radioH">行ける</span></label>
+                            class="radioH" checked><span class="radioH">参加可能</span></label>
                 </div>
                 <div class="middlelight">
                     <label for="middle"><input type="radio" id="middle" name="selectStatus" class="radioM"
@@ -102,7 +110,7 @@
                 </div>
                 <div class="notHighlight">
                     <label for="not"><input type="radio" id="not" name="selectStatus" class="radioN"
-                            value="NOTLIGHTED"><span class="radioN">行けない</span></label>
+                            value="NOTLIGHTED"><span class="radioN">参加不可</span></label>
                 </div>
             </form>
             <div id="dragTableArea"></div>
@@ -118,7 +126,7 @@
             <form id="selectStatusFormWeek" class="paddingLeft30 selectStatusClass">
                 <div class="highlight">
                     <label for="highWeek"><input type="radio" id="highWeek" name="selectStatusWeek" value="HIGHLIGHTED"
-                            class="radioH" checked><span class="radioH">行ける</span></label>
+                            class="radioH" checked><span class="radioH">参加可能</span></label>
                 </div>
                 <div class="middlelight">
                     <label for="middleWeek"><input type="radio" id="middleWeek" name="selectStatusWeek" class="radioM"
@@ -126,7 +134,7 @@
                 </div>
                 <div class="notHighlight">
                     <label for="notWeek"><input type="radio" id="notWeek" name="selectStatusWeek" class="radioN"
-                            value="NOTLIGHTED"><span class="radioN">行けない</span></label>
+                            value="NOTLIGHTED"><span class="radioN">参加不可</span></label>
                 </div>
             </form>
             <div id="weekSchedule"></div>
