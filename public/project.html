@@ -86,6 +86,19 @@
         .saveHideArea {
             display: none;
         }
+
+        /* 616px以上 */
+        @media only screen and (min-width: 616px),
+        print {
+            .selectStatusClass {
+                display: flex;
+            }
+
+            .content {
+                padding: 0 2rem;
+                width: 68%;
+            }
+        }
     </style>
 </head>
 
@@ -110,7 +123,7 @@
         <form id="selectStatusForm" class="paddingLeft30 selectStatusClass">
             <div class="highlight">
                 <label for="high"><input type="radio" id="high" name="selectStatus" value="HIGHLIGHTED" class="radioH"
-                        checked><span class="radioH">行ける</span></label>
+                        checked><span class="radioH">参加可能</span></label>
             </div>
             <div class="middlelight">
                 <label for="middle"><input type="radio" id="middle" name="selectStatus" class="radioM"
@@ -118,7 +131,7 @@
             </div>
             <div class="notHighlight">
                 <label for="not"><input type="radio" id="not" name="selectStatus" class="radioN"
-                        value="NOTLIGHTED"><span class="radioN">行けない</span></label>
+                        value="NOTLIGHTED"><span class="radioN">参加不可</span></label>
             </div>
         </form>
         <div id="dragTableArea"></div>

@@ -85,37 +85,165 @@
       width: 50%;
     }
 
-    table {
-      width: 92%;
-    }
 
-    table td.drag {
-      min-width: 20px;
-      height: 10px;
-    }
-
-    td {
-      min-width: 20px;
-      height: 10px;
-      text-align: center;
-      vertical-align: middle;
-      border: 1px solid #fff;
-    }
-
-    th {
-      padding: 0 1em;
-    }
-
-    /*保存ボタンの非表示*/
-    .saveHideArea {
-      display: none;
+    span.block {
+      display: inline-block;
     }
 
 
-    #selectStatusForm {
+
+    input[type="text"] {
+      width: calc(100% - 140px);
+      margin-bottom: 1.2em;
+    }
+
+    input[type="date"] {
+      width: calc(100% - 160px);
+      font-size: 1em;
+      margin: 1.2em 0.5em;
+      padding: 0.6rem 1rem;
+    }
+
+    /* 1343px以上 */
+    @media only screen and (min-width: 1343px),
+    print {
+      input[type="text"] {
+        min-width: 310px;
+      }
+
+      input[type="date"] {
+        min-width: 310px;
+      }
+
+      dl dd {
+        width: calc(100% - 7em);
+      }
+
+      dl dt {
+        width: 7em;
+      }
+    }
+
+    /* 1451px以下 */
+    @media only screen and (max-width: 1451px) {
+      input[type="date"] {
+        width: 90%;
+      }
+    }
+
+    /* 1400px以下 */
+    @media only screen and (max-width: 1400px) {
+      input[type="text"] {
+        width: 90%;
+      }
+    }
+
+    /* 1342px以下 */
+    @media only screen and (max-width: 1342px) {
+      dl dd {
+        width: calc(100% - 6em);
+      }
+
+      dl dt {
+        width: 6em;
+      }
+    }
+
+    /*1280px以下 943px以上*/
+    @media (min-width: 943px) {
+      .content {
+        width: 90%;
+      }
+    }
+
+    /* 377px以上 943以下 */
+    @media only screen and (min-width: 377px) and (max-width: 943px),
+    print {
+      .content {
+        width: 80%;
+      }
+    }
+
+    .slide {
+      width: 100%;
+      padding: 10px;
+    }
+
+    .slideForm {
+      width: 100%;
+      padding: 10px;
+    }
+
+    /* 943px以上 */
+    @media only screen and (min-width: 943px),
+    print {
+      .slide {
+        width: 60%;
+        padding: 10px;
+      }
+
+      .slideForm {
+        width: 40%;
+        padding: 10px;
+      }
+
+      .half {
+        display: flex;
+      }
+    }
+
+
+
+
+
+    body * {
+      box-sizing: border-box;
+      line-height: 1;
+    }
+
+    dd {
+      margin: 0;
+      padding: 0;
+      border: 0;
+      font-size: 100%;
+      font: inherit;
+      vertical-align: baseline
+    }
+
+    dl {
       display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+    }
+
+    dl dt {
+      text-align: right;
+      /*width: 6em;*/
+      padding: 0.5em 1em 0.5em 1em;
+      position: relative;
+    }
+
+    dl dt::after {
+      content: '●';
+      position: absolute;
+      right: -0.5em;
+      top: 5px;
+      font-size: 22px;
+      color: rgb(240, 173, 96);
+    }
+
+    dl dd {
+      /*width: calc(100% - 6em);*/
+      padding: 0.5em 1.0em 1.2em;
+      border-left: 2px solid #ccc;
+    }
+
+    .leftBar {
+      padding: 10px 20px 10px 20px;
+      margin: 10px;
     }
   </style>
+
 </head>
 
 <body>
@@ -130,36 +258,97 @@
       </ul>
     </nav>
   </header>
-  <div class="content">
-    <table id="inputArea">
-      <tr class="effect">
-        <td class="textRight">
-          <p>プロジェクト名 : </p>
-        </td>
-        <td>
-          <input id="project-name" type="text">
-        </td>
-      </tr>
-      <tr class="effect">
-        <td class="textRight">
-          <p>プロジェクト開始 : </p>
-        </td>
-        <td>
-          <input id="project-start" type="date">
-        </td>
-      </tr>
-      <tr class="effect">
-        <td class="textRight">
-          <p>プロジェクト終了 : </p>
-        </td>
-        <td><input id="project-finish" type="date"></td>
-      </tr>
-      <tr>
-        <td colspan="2">
-          <button id="project-make" class="btnripple" onclick="forProject()"> プロジェクトを作成 </button>
-        </td>
-      </tr>
-    </table>
+  <div class="content half">
+    <div class="slide">
+      <div class="leftBar">
+        <p style="text-align:center">
+          <span style="font-weight: bold;" class="block">ミーティング,&nbsp; </span><span style="font-weight: bold;"
+            class="block">ゲーム,&nbsp; </span><span style="font-weight: bold;" class="block">打ち上げ,&nbsp; </span><span
+            style="font-weight: bold;" class="block">飲み会など</span><span class="block">複数人で</span>集まるとき,<span
+            class="block">予定</span>を入力し<span class="block">簡単</span>に<span style="font-weight: bold;"
+            class="block">日程調整をする</span>ことができます.
+        </p>
+      </div>
+      <div>
+        <fieldset>
+          <legend style="margin:0 auto">
+            <h3 style="text-align:center">&lt;&lt; ココがすごい! &gt;&gt;</h3>
+          </legend>
+          <ul>
+            <li>
+              <p><span style="font-weight: bold;" class="block">ドラック&ドロップ</span>で<span class="block">入力</span>することができる.
+              </p>
+            </li>
+            <li>
+              <p><span style="font-weight: bold;" class="block">参加可能</span>,&nbsp;<span style="font-weight: bold;"
+                  class="block">未確定</span><span style="font-weight: bold;">・</span><span style="font-weight: bold;"
+                  class="block">要調整</span>,&nbsp;<span style="font-weight: bold;" class="block">参加不可</span>で<span
+                  class="block">共有する</span>ため他の<span class="block">ユーザー</span>に<span style="font-weight: bold;"
+                  class="block">詳しい予定が知られない.</span></p>
+            </li>
+            <li>
+              <p class="del"><span style="font-weight: bold;" class="block">"予定がない"</span><span
+                  style="font-weight: bold;">=</span><span style="font-weight: bold;" class="block">"参加可能"</span>ではない.
+              </p>
+              <p class="del">
+                <span class="block">スケジュールアプリ</span>などで<span class="block">時間を調整すると,</span><span
+                  class="block">予定がないと</span><span class="block">その時間を</span><span class="block">候補に挙げられる.</span>
+              </p>
+            </li>
+            <li>
+              <p><span class="block">複数のプロジェクトに</span><span class="block">ペーストする</span>ことができ,<span
+                  class="block">入力</span>を<span class="block">省くこと</span>ができる.</p>
+            </li>
+            <li>
+              <p><span>週間的な予定を</span><span>登録する</span>ことで,<span>さらに</span><span>入力</span>を<span>省くこと</span>ができる.</p>
+            </li>
+          </ul>
+        </fieldset>
+
+      </div>
+
+      <div style="box-sizing: border-box;
+     line-height: 1;">
+        <fieldset>
+          <legend style="margin:0 auto">
+            <h2 style="text-align:center">&nbsp;&nbsp;使い方&nbsp;&nbsp;</h2>
+          </legend>
+          <dl>
+            <dt>主催者</dt>
+            <dd>
+              <p class="del" style="padding-bottom: 12px;">1.&emsp;<span class="block">プロジェクト</span>の<span
+                  class="block">作成</span></p>
+              <p class="del">2.&emsp;<span class="block">URL</span>を<span class="block">メンバー</span>に<span
+                  class="block">共有</span></p>
+            </dd>
+            <dt>全員</dt>
+            <dd>
+              <p class="del">3.&emsp;<span class="block">スケジュール</span>を<span class="block">登録</span></p>
+            </dd>
+            <dt>提案者</dt>
+            <dd>
+              <p class="del">4.&emsp;<span class="block">参加する</span><span class="block">メンバー</span>を<span
+                  class="block">チェックし,</span><span class="block">ピックアップ</span>された<span class="block">時間</span>を<span
+                  class="block">共有</span></p>
+            </dd>
+          </dl>
+        </fieldset>
+      </div>
+    </div>
+    <form class="slideForm">
+      <fieldset>
+        <legend style="margin:0 auto">
+          <h3 style="text-align:center">&nbsp;&nbsp;プロジェクト作成&nbsp;&nbsp;</h3>
+        </legend>
+        <label class="effect">プロジェクト名 :<input id="project-name" type="text"></label><br>
+        <label class="effect">プロジェクト開始 : <input id="project-start" type="date"></label><br>
+        <label class="effect">プロジェクト終了 : <input id="project-finish" type="date"></label><br>
+        <div style="text-align:center"><button id="project-make" class="btnripple" onclick="forProject()"
+            style="margin:10px 0;"> プロジェクトを作成
+          </button></div>
+
+      </fieldset>
+    </form>
   </div>
   <!-- テキスト表示用 -->
   <p id="info"></p>

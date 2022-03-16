@@ -2,28 +2,40 @@
 @media only screen and (max-width: 638px){
 
 }
-/* 376px以上 */
-@media only screen and (min-width: 376px), print{
+/* 377px以上 */
+@media only screen and (min-width: 377px), print{
     .navigation ul {
         display: flex;
+        margin: 3px 0;
     } 
-}
-/* 616px以上 */
-@media only screen and (min-width: 616px), print{
-    .selectStatusClass {
-        display: flex;
-    } 
-    .content{
-        padding: 0 2rem;
-        width: 68%;
+    .navigation{
+        height: 60px;
+    }
+    .navigation li{
+        margin-bottom: 5px;
     }
 }
+/* 376px以下 */
+@media only screen and (max-width: 376px){
+    .header {
+        height: 150px;
+    }
+    .navigation {
+        height: 150px;
+    }
+    .navigation ul {
+        margin:10px 0;
+    }
+    .navigation li{
+        margin:3% ;
+    }
+}
+
 /* pc　638px以上 */
 @media only screen and (min-width: 638px), print{
     .header{
         display: flex;
     }
-
 }
 /* 943px以上 */
 @media only screen and (min-width: 943px), print{
@@ -31,12 +43,7 @@
         display: flex;
     } 
 }
-/* 376px以下 */
-@media only screen and (max-width: 376px){
-    .header{
-        height: 170px;
-    }
-}
+
 /*================ << header周り >> ================*/
 
 .header {
@@ -59,24 +66,20 @@ h1{
 }
 .navigation {
     width: 100%;
-    height: 60px;
     box-sizing: border-box;
 }
 .navigation ul {
     justify-content: flex-end;
     list-style: none;
-    margin: 3px 0;
+    
 }
 .navigation li {
     margin-right: 5%;
-    margin-bottom: 5px;
 }
 /*================ << mainの表示 >> ================*/
 .content {
-    margin: 0 auto;
-    
+    margin: 0 auto;  
     position: relative;
-    
 }
 /*================ << Myページへのボタン >> ================*/
 .mypageBtn {
@@ -158,7 +161,6 @@ input[type="text"] {
     font-size: 1em;
     margin: 0.5em;
     padding: 0.6rem 1rem;
-    width: 100%
 }
 /*================ << input欄のeffect >> ================*/
 .effect :focus {
@@ -369,7 +371,7 @@ table td.highlighted {
     font-size: 40px;
 }
 .del {
-    padding: 0 0;
+    padding: 0px 0px;
     margin: 0px 0px;
 }
 .paddingLeft30{
@@ -377,4 +379,10 @@ table td.highlighted {
 }
 .left30{
     left:30px;
+}
+/*コンテンツごとの左にバーを出す*/
+.leftBar {
+    border-left: solid 5px rgb(240, 173, 96);
+    padding-left: 20px;
+    margin: 20px 0;
 }
