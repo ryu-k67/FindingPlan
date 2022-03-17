@@ -234,5 +234,5 @@ function createProject(projectName, projectStartPeriod, projectEndPeriod, projec
     .then(() => {
       console.log("seikou");
       window.location = url;
-    })
+    });
 }
