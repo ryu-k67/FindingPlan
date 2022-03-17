@@ -194,7 +194,6 @@ function forProject() {
   console.log(url);
   createProject(projectName, projectStartPeriod, projectFinishPeriod, projectId, url);
   console.log("成功");
-  //window.location=url;
 }
 
 function getProjectId() {
