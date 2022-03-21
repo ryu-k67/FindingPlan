@@ -279,6 +279,7 @@ async function pickUp(){
     }
     return schedule;
 }
+
 async function pick(schedule){
     let check=[];
     console.log(memberName);
@@ -293,6 +294,14 @@ async function pick(schedule){
         check[i]=element.checked;
     }
     console.log(check);
+    for(let i=0;i<memberName.length;i++){
+        if(check[i]==true){
+            break;
+        }
+        if(i==memberName.length-1){
+            return [[],[]]
+        }
+    }
     let OKschedule=[];
     let flag;//0:×含む 1:△含む〇 2:全部〇
     console.log(schedule);
@@ -313,7 +322,7 @@ async function pick(schedule){
         }
         OKschedule[i]=flag;
     }
-
+    console.log(OKschedule);
     let resultPerfect="";//〇だけ
     let resultAll="";//△含む
     let start=await getProjectPeriodStart();
@@ -321,10 +330,10 @@ async function pick(schedule){
     let time="";
     for(let i=0;i<OKschedule.length/144;i++){
         let month=start.getMonth()+1;
-        let day=start.getDate();
+        let day=start.getDate()+i;
         let dayOfWeek=start.getDay();
         let dayStr=month+"/"+day+"("+dayOfWeekStr[dayOfWeek]+")";
-        flag=0;
+        flag=0;        
         for(let j=0;j<144;j++){
             //時間の始まり
             if(flag==0){
@@ -343,17 +352,27 @@ async function pick(schedule){
                 if(OKschedule[i*144+j]==1){
                     flag=1;
                     resultAll+=dayStr+time;
+                    if(j==143){
+                        resultAll+="24:00\n";
+                    }
                 }
                 else if(OKschedule[i*144+j]==2){
                     flag=2;
                     resultPerfect+=dayStr+time;
                     resultAll+=dayStr+time;
+                    if(j==143){
+                        resultPerfect+="24:00\n";
+                        resultAll+="24:00\n";
+                    }
                 }
             }
-            //△の連続が終了したら
+            //一つ前が△
             else if(flag==1){
-                if(OKschedule[i*144+j]==1){
+                if(OKschedule[i*144+j]==1){//今回も△
                     flag=1;
+                    if(j==143){
+                        resultAll+="24:00\n";
+                    }
                     continue;
                 }
 
@@ -364,7 +383,7 @@ async function pick(schedule){
                     time="0"+Math.floor(j/6)+":"+j%6+"0";
                 }
                 
-                if(OKschedule[i*144+j]==0){
+                if(OKschedule[i*144+j]==0){//△の連続が終了
                     flag=0;
                     resultAll+=time+"\n";
                 }
@@ -372,12 +391,20 @@ async function pick(schedule){
                     flag=2;
                     //resultAll+=time+"\n";
                     resultPerfect+=dayStr+time+"~";
+                    if(j==143){
+                        resultPerfect+="24:00\n";
+                        resultAll+="24:00\n";
+                    }
                 }
             }
-            //〇の連続が終了したら
+            //一つ前が〇
             else if(flag==2){
-                if(OKschedule[i*144+j]==2){
+                if(OKschedule[i*144+j]==2){//今回も〇
                     flag=2;
+                    if(j==143){
+                        resultPerfect+="24:00\n";
+                        resultAll+="24:00\n";
+                    }
                     continue;
                 }
 
@@ -396,7 +423,9 @@ async function pick(schedule){
                 else if(OKschedule[i*144+j]==1){
                     flag=1;
                     resultPerfect+=time+"\n";
-                    //resultAll+=dayStr+time+"~";
+                    if(j==143){
+                        resultAll+="24:00\n";
+                    }
                 }
             }
         }

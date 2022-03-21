@@ -84,11 +84,19 @@ function setMySchedule( uid, weekSchedule,mySchedule){
                             mySchedule[i*144+j]=3;
                         }
                         else if(mySchedule[i*144+j]==1){
-                            mySchedule[i*144+j]=4;
+                            mySchedule[i*144+j]=1;
                         }
                     }
                     else if(sum==2){
-                        mySchedule[i*144+j]=1;
+                        if(mySchedule[i*144+j]==0){
+                            mySchedule[i*144+j]=3;
+                        }
+                        else if(mySchedule[i*144+j]==1){
+                            mySchedule[i*144+j]=1;
+                        }
+                        else if(mySchedule[i*144+j]==2){
+                            mySchedule[i*144+j]=5;
+                        }
                     }
                     else if(sum==3){
                         if(mySchedule[i*144+j]==1){

@@ -1,5 +1,4 @@
-let db=firebase.firestore();
-let userid="";
+//let userid="";
 var userName="";
 
 
@@ -20,7 +19,7 @@ function createUser() {
   }
   for(let i=0;i<7;i++){
     for(let j=0;j<144;j++){
-      weekArray[i*144+j]=1;
+      weekArray[i*144+j]=2;
     }
   }
   
@@ -46,12 +45,12 @@ function createUser() {
         console.log(i); 
         db.collection("account").doc(userid).collection("myScheduleId").doc().set({
           date:-1,
-          mySchedule:[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+          mySchedule:[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2]
         })
       }
       setTimeout(function(){
         window.location="mypage.html";
-      },  1000*2);
+      },  1000*2.5);
       
     })
     .catch(function (error) { // 失敗した場合に実行される箇所
@@ -128,9 +127,12 @@ function logoutDisplay() {
 //認証状態の確認
 function mypageClick() {
   firebase.auth().onAuthStateChanged(function (user) {
+    console.log("a");
     if (user) {
       userid = firebase.auth().currentUser.uid;
-      loginDisplay();
+      console.log("page");
+      //loginDisplay();
+      window.location = "mypage.html";
     }
     else {
       window.location = "login.html";
@@ -142,7 +144,7 @@ function loginDisplay() {
   inputarea.classList.add('hide');
   //let userName=getUserName(userid);
   info.textContent = "ログイン中です!";
-  window.location = "mypage.html";
+  //window.location = "mypage.html";
 }
 function getUserName(uid) {
   if (!uid) {
