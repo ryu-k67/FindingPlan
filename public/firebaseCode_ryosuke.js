@@ -146,6 +146,7 @@ async function changeMySchedule(userId,weekAfterSchedule){
     })
     let scheduleId=[];
     let i=0;
+    console.log(mySchedule);
     db.collection("account").doc(userId).collection("myScheduleId").orderBy("date").get()
     .then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
