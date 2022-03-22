@@ -243,7 +243,8 @@
     <nav class="navigation">
       <ul class="navigationList">
         <li><button id="mypage" class="mypageBtn" onclick="mypageClick()">Myページ へ</button></li>
-        <li><button class="btnripple" onclick="logout()">ログアウト</button></li>
+        <li><button id="login" class="btnripple" onclick="login()">ログイン</button></li>
+        <li><button id="logout" class="btnripple" onclick="logout()">ログアウト</button></li>
       </ul>
     </nav>
   </header>
@@ -345,6 +346,16 @@
   <script>
     let db=firebase.firestore();
     let userid="";
+    window.addEventListener('DOMContentLoaded', function () {
+        firebase.auth().onAuthStateChanged(function (user) {
+            if (user) {
+              document.getElementById("login").style.display="none";
+            }
+            else {
+              document.getElementById("logout").style.display="none";
+            }
+        });
+    })
   </script>
   <script src="login.js"></script>
 </body>
