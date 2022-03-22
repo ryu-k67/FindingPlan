@@ -13,15 +13,6 @@
   <!--<link rel="stylesheet" href="login.css" />-->
   <link rel="stylesheet" type="text/css" href="base.css" />
   <style>
-    /*なぜかpushできない*/
-    /*ログイン中の表示*/
-    #info {
-      text-align: center;
-      font-size: 4em;
-      font-weight: bold;
-    }
-
-    /*追加*/
     .headingRow {
       top: 0;
     }
@@ -242,7 +233,7 @@
     </h1>
     <nav class="navigation">
       <ul class="navigationList">
-        <li><button id="mypage" class="mypageBtn" onclick="mypageClick()">Myページ へ</button></li>
+        <li><a href="/mypage.html" target="_blank" rel="noopener noreferrer">マイページへ</a></li>
         <li><button class="btnripple" onclick="logout()">ログアウト</button></li>
       </ul>
     </nav>
@@ -340,11 +331,9 @@
       </fieldset>
     </div>
   </div>
-  <!-- テキスト表示用 ----->
-  <p id="info"></p>
   <script>
-    let db=firebase.firestore();
-    let userid="";
+    let db = firebase.firestore();
+    let userid = "";
   </script>
   <script src="login.js"></script>
 </body>
