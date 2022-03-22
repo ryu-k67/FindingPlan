@@ -339,10 +339,10 @@
     window.addEventListener('DOMContentLoaded', function () {
       firebase.auth().onAuthStateChanged(function (user) {
         if (user) {
-          $("#login").style.display = "none";
+          $("#login").css("display", "none");
         }
         else {
-          $("#logout").style.display = "none";
+          $("#loginout").css("display", "none");
         }
       });
     })
