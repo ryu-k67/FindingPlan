@@ -208,7 +208,7 @@ input[type="text"] {
 }
 /*================ << selectStatusのため >> ================*/
 form {
-    margin-bottom: 0.7em;
+    margin: 0.7em 0;
 }
 /*high*/
 label.radioH{
