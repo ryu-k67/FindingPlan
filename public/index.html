@@ -233,8 +233,10 @@
     </h1>
     <nav class="navigation">
       <ul class="navigationList">
-        <li><a href="/mypage.html" target="_blank" rel="noopener noreferrer">マイページへ</a></li>
+        <li><a href="/mypage.html" target="_blank" rel="noopener noreferrer">Myページ へ</a></li>
         <li><button class="btnripple" onclick="logout()">ログアウト</button></li>
+        <li><button id="login" class="btnripple" onclick="login()">ログイン</button></li>
+        <li><button id="logout" class="btnripple" onclick="logout()">ログアウト</button></li>
       </ul>
     </nav>
   </header>
@@ -334,6 +336,16 @@
   <script>
     let db = firebase.firestore();
     let userid = "";
+    window.addEventListener('DOMContentLoaded', function () {
+      firebase.auth().onAuthStateChanged(function (user) {
+        if (user) {
+          $("#login").style.display = "none";
+        }
+        else {
+          $("#logout").style.display = "none";
+        }
+      });
+    })
   </script>
   <script src="login.js"></script>
 </body>
