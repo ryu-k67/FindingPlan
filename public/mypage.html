@@ -198,7 +198,9 @@
             for (var j = 0; j < 144; j++) {
                 if (userSchedule[count] == 0) {
                     $("<td id=\"cell" + count + "\" class=\"drag\"></td>").appendTo(tableRow);
-                } else {
+                } else if(userSchedule[count]==1) {
+                    $("<td id=\"cell" + count + "\" class=\"middlelighted drag\"></td>").appendTo(tableRow);
+                } else{
                     $("<td id=\"cell" + count + "\" class=\"highlighted drag\"></td>").appendTo(tableRow);
                 }
                 count++;
@@ -225,6 +227,8 @@
             for (var j = 0; j < 144; j++) {
                 if (weekUserSchedule[count] == 0) {
                     $("<td id=\"weekCell" + count + "\" class=\"dragWeek\"></td>").appendTo(weekTableRow);
+                } else if(weekUserSchedule[count]==1){
+                    $("<td id=\"weekCell" + count + "\" class=\"middlelighted dragWeek\"></td>").appendTo(weekTableRow);
                 } else {
                     $("<td id=\"weekCell" + count + "\" class=\"highlighted dragWeek\"></td>").appendTo(weekTableRow);
                 }
@@ -533,7 +537,7 @@
         }
         console.log(scheduleArray.length);
         setMySchedule(userid, weekUserSchedule, scheduleArray);
-        changeMySchedule(userSchedule, scheduleArray, userid);
+        //changeMySchedule(userSchedule, scheduleArray, userid);
     }
     //週間テンプレート登録ボタンが押されたときの処理---------------------------------------
     function weekScheduleSave() {
@@ -544,23 +548,22 @@
                 if ($("#weekCell" + i).hasClass("highlighted")) {
                     weekScheduleArray.push(2);
                 } else if ($("#weekCell" + i).hasClass("middlelighted")) {
-                    scheduleArray.push(1);
+                    weekScheduleArray.push(1);
                 } else {
-                    scheduleArray.push(0);
+                    weekScheduleArray.push(0);
                 }
                 i++;
             }
         }
         console.log(weekScheduleArray);
         setWeekSchedule(userid, weekScheduleArray);
-        changeWeekSchedule(userid, weekScheduleArray);
-        changeMySchedule(userSchedule, scheduleArray, userid);
+        changeMySchedule(userid, weekScheduleArray);
     }
 
 </script>
 <script src="firebaseCode.js"></script>
 <script src="firebaseCode_ryosuke.js"></script>
 <script src="change.js"></script>
-
+<script src="login.js"></script>
 
 </html>
