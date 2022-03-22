@@ -145,7 +145,7 @@ async function getMySchedule(uid) {
 
     //初期状態の生成
     for (i = 0; i < 144; i++) {
-        defaultPeriod[i] = 1;
+        defaultPeriod[i] = 2;
     }
 
     i = 0;  //iの初期化

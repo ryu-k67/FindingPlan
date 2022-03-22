@@ -325,15 +325,16 @@ async function pick(schedule){
     console.log(OKschedule);
     let resultPerfect="";//〇だけ
     let resultAll="";//△含む
-    let start=await getProjectPeriodStart();
+    let today=await getProjectPeriodStart();
     let dayOfWeekStr=["日","月","火","水","木","金","土"];
     let time="";
     for(let i=0;i<OKschedule.length/144;i++){
-        let month=start.getMonth()+1;
-        let day=start.getDate()+i;
-        let dayOfWeek=start.getDay();
+        let month=today.getMonth()+1;
+        let day=today.getDate();
+        let dayOfWeek=today.getDay();
         let dayStr=month+"/"+day+"("+dayOfWeekStr[dayOfWeek]+")";
         flag=0;        
+        today.setDate(today.getDate()+1);
         for(let j=0;j<144;j++){
             //時間の始まり
             if(flag==0){
