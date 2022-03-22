@@ -211,7 +211,8 @@
         <nav class="navigation">
             <ul class="navigationList">
                 <li><button id="mypage" class="mypageBtn" onclick="mypageClick()">Myページ へ</button></li>
-                <li><button class="btnripple" onclick="logout()">ログアウト</button></li>
+                <li><button id="btnlogin" class="btnripple" onclick="login()">ログイン</button></li>
+                <li><button id="btnlogout" class="btnripple" onclick="logout()">ログアウト</button></li>
             </ul>
         </nav>
     </header>
@@ -368,9 +369,13 @@
         //認証状態の確認
         firebase.auth().onAuthStateChanged(async function (user) {
             if (user) {
+                document.getElementById("btnlogin").style.display="none";
                 userId = firebase.auth().currentUser.uid;
                 console.log(userId);
                 loginMemberIndex = await getLoginMemberIndex(userId);
+            }
+            else{
+                document.getElementById("btnlogout").style.display="none";
             }
             console.log(loginMemberIndex);
         });

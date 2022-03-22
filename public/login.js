@@ -94,7 +94,7 @@ function login() {
 //ログアウト処理
 function logout() {
   firebase.auth().signOut();
-  window.location="index.html";
+  //window.location="index.html";
 };
 
 //認証状態の確認
