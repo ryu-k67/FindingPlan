@@ -94,7 +94,6 @@
         </h1>
         <nav class="navigation">
             <ul class="navigationList">
-                <li><button id="mypage" class="mypageBtn" onclick="mypageClick()">Myページ へ</button></li>
                 <li><button class="btnripple" onclick="logout()">ログアウト</button></li>
             </ul>
         </nav>
@@ -198,9 +197,9 @@
             for (var j = 0; j < 144; j++) {
                 if (userSchedule[count] == 0) {
                     $("<td id=\"cell" + count + "\" class=\"drag\"></td>").appendTo(tableRow);
-                } else if(userSchedule[count]==1) {
+                } else if (userSchedule[count] == 1) {
                     $("<td id=\"cell" + count + "\" class=\"middlelighted drag\"></td>").appendTo(tableRow);
-                } else{
+                } else {
                     $("<td id=\"cell" + count + "\" class=\"highlighted drag\"></td>").appendTo(tableRow);
                 }
                 count++;
@@ -227,7 +226,7 @@
             for (var j = 0; j < 144; j++) {
                 if (weekUserSchedule[count] == 0) {
                     $("<td id=\"weekCell" + count + "\" class=\"dragWeek\"></td>").appendTo(weekTableRow);
-                } else if(weekUserSchedule[count]==1){
+                } else if (weekUserSchedule[count] == 1) {
                     $("<td id=\"weekCell" + count + "\" class=\"middlelighted dragWeek\"></td>").appendTo(weekTableRow);
                 } else {
                     $("<td id=\"weekCell" + count + "\" class=\"highlighted dragWeek\"></td>").appendTo(weekTableRow);
