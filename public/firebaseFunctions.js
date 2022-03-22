@@ -266,7 +266,6 @@ async function setprojectData(userId,memberName,newSchedule){
 }
 
 async function pickUp(){
-    
     let member=await getProjectMembers();
     console.log(member);
     let schedule=[];

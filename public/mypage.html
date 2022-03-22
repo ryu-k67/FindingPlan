@@ -12,6 +12,11 @@
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <link rel="stylesheet" type="text/css" href="base.css" />
     <style>
+        body * {
+            box-sizing: border-box;
+            line-height: 1;
+        }
+
         .doubleHeading {
             min-width: 100px;
         }
@@ -101,15 +106,15 @@
             </p>
             <form id="selectStatusForm" class="paddingLeft30 selectStatusClass">
                 <div class="highlight">
-                    <label for="high"><input type="radio" id="high" name="selectStatus" value="HIGHLIGHTED"
-                            class="radioH" checked><span class="radioH">参加可能</span></label>
+                    <label for="high" class="radioH"><input type="radio" id="high" name="selectStatus"
+                            value="HIGHLIGHTED" class="radioH" checked><span class="radioH">参加可能</span></label>
                 </div>
                 <div class="middlelight">
-                    <label for="middle"><input type="radio" id="middle" name="selectStatus" class="radioM"
-                            value="MIDDLELIGHTED"><span class="radioM">未確定,要調整</span></label>
+                    <label for="middle" class="radioM"><input type="radio" id="middle" name="selectStatus"
+                            class="radioM" value="MIDDLELIGHTED"><span class="radioM">未確定・要調整</span></label>
                 </div>
                 <div class="notHighlight">
-                    <label for="not"><input type="radio" id="not" name="selectStatus" class="radioN"
+                    <label for="not" class="radioN"><input type="radio" id="not" name="selectStatus" class="radioN"
                             value="NOTLIGHTED"><span class="radioN">参加不可</span></label>
                 </div>
             </form>
@@ -125,16 +130,16 @@
             </p>
             <form id="selectStatusFormWeek" class="paddingLeft30 selectStatusClass">
                 <div class="highlight">
-                    <label for="highWeek"><input type="radio" id="highWeek" name="selectStatusWeek" value="HIGHLIGHTED"
-                            class="radioH" checked><span class="radioH">参加可能</span></label>
+                    <label for="highWeek" class="radioH"><input type="radio" id="highWeek" name="selectStatusWeek"
+                            value="HIGHLIGHTED" class="radioH" checked><span class="radioH">参加可能</span></label>
                 </div>
                 <div class="middlelight">
-                    <label for="middleWeek"><input type="radio" id="middleWeek" name="selectStatusWeek" class="radioM"
-                            value="MIDDLELIGHTED"><span class="radioM">未確定,要調整</span></label>
+                    <label for="middleWeek" class="radioM"><input type="radio" id="middleWeek" name="selectStatusWeek"
+                            class="radioM" value="MIDDLELIGHTED"><span class="radioM">未確定・要調整</span></label>
                 </div>
                 <div class="notHighlight">
-                    <label for="notWeek"><input type="radio" id="notWeek" name="selectStatusWeek" class="radioN"
-                            value="NOTLIGHTED"><span class="radioN">参加不可</span></label>
+                    <label for="notWeek" class="radioN"><input type="radio" id="notWeek" name="selectStatusWeek"
+                            class="radioN" value="NOTLIGHTED"><span class="radioN">参加不可</span></label>
                 </div>
             </form>
             <div id="weekSchedule"></div>
