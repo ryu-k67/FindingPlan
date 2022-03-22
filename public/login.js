@@ -25,7 +25,7 @@ function createUser() {
   
   firebase.auth().createUserWithEmailAndPassword(mailAddress, password)
   .then(function(){  
-    inputarea.classList.add('hide');
+    inputarea.classList.add('hideArea');
     info.textContent = "アカウント作成中です!";
 
     userid = firebase.auth().currentUser.uid;
@@ -107,12 +107,6 @@ firebase.auth().onAuthStateChanged(function(user) {
   }
 });
 
-function loginDisplay() {
-//  logout.classList.remove('hide');
-  inputarea.classList.add('hide');
-  info.textContent = "ログイン中です!";
-  window.location="mypage.html";
-}
 
 /*  
 function logoutDisplay() {
@@ -140,10 +134,10 @@ function mypageClick() {
 }
 function loginDisplay() {
   //  logout.classList.remove('hide');
-  inputarea.classList.add('hide');
+  inputarea.classList.add('hideArea');
   //let userName=getUserName(userid);
   info.textContent = "ログイン中です!";
-  //window.location = "mypage.html";
+  window.location = "mypage.html";
 }
 function getUserName(uid) {
   if (!uid) {
