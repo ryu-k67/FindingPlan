@@ -13,8 +13,14 @@
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <link rel="stylesheet" type="text/css" href="base.css" />
     <style>
+        body * {
+            box-sizing: border-box;
+            line-height: 1;
+        }
+
         .headingRow {
             top: 0;
+            padding: 3px 12px;
         }
 
         .headingCol span {
@@ -29,6 +35,7 @@
             position: relative;
             width: 50px;
             height: 50px;
+            cursor: pointer;
         }
 
         .openbtn span {
@@ -59,10 +66,6 @@
         .openbtn.active span:nth-of-type(2) {
             transform: rotate(45deg);
             width: 50%;
-        }
-
-        table {
-            width: 92%;
         }
 
         table td.drag {
@@ -99,7 +102,105 @@
                 width: 68%;
             }
         }
+
+        #pickupArea {
+            display: none;
+        }
+
+        /*================ << 参加メンバーのチェック >> ================*/
+        .loginMember {
+            padding: 6px 0;
+        }
+
+        label.joinMember {
+            cursor: pointer;
+            display: flex;
+            margin: 3px 0;
+            padding: auto;
+        }
+
+        input.joinMember {
+            appearance: none;
+            position: absolute;
+            padding-right: 4px;
+        }
+
+        span.joinMember {
+            position: relative;
+            display: flex;
+            background: rgba(0, 0, 0, .15);
+            border-radius: 50%;
+            transition: all .15s linear;
+            margin-right: 8px;
+        }
+
+        input.joinMember:checked+span.joinMember {
+            background: rgb(240, 173, 96);
+        }
+
+        span.joinMember {
+            position: relative;
+            top: 0;
+            left: 0;
+            display: block;
+            width: 20px;
+            height: 20px;
+            border: solid 2px transparent;
+            background: rgba(0, 0, 0, .15);
+            border-radius: 50%;
+            transition: all .15s linear;
+
+        }
+
+        input.joinMember:checked+span.joinMember::before {
+            content: "";
+            display: block;
+            position: absolute;
+            top: 54%;
+            left: 52%;
+            width: 45%;
+            height: 3px;
+            border-radius: 2px;
+            transform: translate(-3.75px, 0px) rotateZ(-135deg);
+            transform-origin: 2px 2px;
+            background: #FFFFFF;
+        }
+
+        input.joinMember:checked+span.joinMember::after {
+            content: "";
+            display: block;
+            position: absolute;
+            top: 38%;
+            left: 57%;
+            width: 70%;
+            height: 3px;
+            border-radius: 2px;
+            transform: translate(-3.2px, 3.2px) rotateZ(-45deg);
+            transform-origin: 2px 2px;
+            background: #FFFFFF;
+        }
+
+        #hOnly {
+            max-height: 14.6em;
+            overflow-y: scroll;
+            padding: 8px 12px;
+        }
+
+        #handm {
+            max-height: 14.6em;
+            overflow-y: scroll;
+            padding: 8px 12px;
+        }
+
+        /* スマホ　404px以下 */
+        @media only screen and (min-width: 404px) {
+            #pickupOutput {
+                display: flex
+            }
+        }
     </style>
+
+
 </head>
 
 <body>
@@ -115,22 +216,29 @@
         </nav>
     </header>
     <div class="content">
-        <p id="innerName" class="contentTitle del paddingLeft30"></p>
+        <p id="innerName" class="contentTitle del" style="padding: 8px 0 8px 30px;"></p>
         <!-- コピー対象要素とコピーボタン -->
-        <button class="btnripple left30" onclick="copyToClipboard()" style="margin-bottom: 0.7em;">URLをコピー</button>
-        <button class="btnPickUp" onclick="clickPickUp()" style="margin-bottom: 0.7em;">ピックアップ</button>
+        <div style="display: flex;">
+            <button class="btnripple left30" onclick="copyToClipboard()" style="margin-bottom: 0.7em;"><span
+                    class="block">URL</span>を<span class="block">コピー</span></button>
+            <div class="guideArea">
+                <p class="paddingLeft30"><span class="block">URL</span>を<span class="block">コピー</span>を<span
+                        class="block">押して,</span><span class="block">プロジェクト</span><span class="block">メンバー</span>に<span
+                        class="block">共有</span>してください.</p>
+            </div>
+        </div>
 
         <form id="selectStatusForm" class="paddingLeft30 selectStatusClass">
             <div class="highlight">
-                <label for="high"><input type="radio" id="high" name="selectStatus" value="HIGHLIGHTED" class="radioH"
-                        checked><span class="radioH">参加可能</span></label>
+                <label for="high" class="radioH"><input type="radio" id="high" name="selectStatus" value="HIGHLIGHTED"
+                        class="radioH" checked><span class="radioH">参加可能</span></label>
             </div>
             <div class="middlelight">
-                <label for="middle"><input type="radio" id="middle" name="selectStatus" class="radioM"
-                        value="MIDDLELIGHTED"><span class="radioM">未確定,要調整</span></label>
+                <label for="middle" class="radioM"><input type="radio" id="middle" name="selectStatus" class="radioM"
+                        value="MIDDLELIGHTED"><span class="radioM">未確定・要調整</span></label>
             </div>
             <div class="notHighlight">
-                <label for="not"><input type="radio" id="not" name="selectStatus" class="radioN"
+                <label for="not" class="radioN"><input type="radio" id="not" name="selectStatus" class="radioN"
                         value="NOTLIGHTED"><span class="radioN">参加不可</span></label>
             </div>
         </form>
@@ -138,13 +246,47 @@
         <div class="guideArea firstGuide">
             <p>[1]表の+を押す. </p>
         </div>
+        <div class="underTable hideArea">
+            <div class="guideArea del">
+
+                <details>
+                    <summary>ログインするといいこと</summary>
+                    <div style="border-left: solid 5px rgb(240, 173, 96); margin-left:10%;">
+                        <ol style="padding:0 0 0 30px;">
+                            <li>
+                                <p class="del" style="padding:6px 0;">
+                                    <span class="block">スケジュール</span>を<span class="block"
+                                        style="font-weight: bold;">変更</span><span class="block">する</span>ことができます.
+                                </p>
+                            </li>
+                            <li>
+                                <p class="del" style="padding:6px 0;">
+                                    <span class="block">複数のプロジェクトに</span><span class="block">ペーストする</span>ことができ, <span
+                                        class="block">入力</span>を<span style="font-weight: bold;"
+                                        class="block">省くこと</span>ができる.
+                                </p>
+                            </li>
+                            <li>
+                                <p class="del" style="padding:6px 0;">
+                                    <span class="block">週間的な</span><span class="block">予定</span>を<span
+                                        class="block">登録する</span>ことで,<span class="block">さらに</span><span
+                                        class="block">入力</span>を<span style="font-weight: bold;"
+                                        class="block">省くこと</span>ができる.
+                                </p>
+                            </li>
+                        </ol>
+                    </div>
+                </details>
+            </div>
+        </div>
         <ul class="underTable">
             <ui>
                 <div class="hideArea">
                     <div class="guideArea del">
                         <p class="del">[2-1]ログインする方は下のボタンを押してください.</p>
                     </div>
-                    <button id="login" class="btnripple left30" onclick="onClickLogin()">ログイン</button>
+                    <button id="login" class="btnripple left30" onclick="onClickLogin()"
+                        style="margin:8px 0;">ログイン</button>
                 </div>
             </ui>
             <ui style="padding: 0 1em;">
@@ -154,7 +296,7 @@
                     </div>
                     <label class="effect">
                         <input id="unLoginUserName" type="text" placeholder="名前を入力し, Enterを押してください."
-                            style="width: 17.3em;">
+                            style="width: 19.4em;">
                     </label>
                 </div>
             </ui>
@@ -168,12 +310,28 @@
                 </ui>
                 <ui class="del">
                     <div class="guideArea paddingLeft30">
-                        <p class="paddingLeft30 del">[3]ドラック&ドロップで可能な時間をオレンジ, 不可能な時間を灰色にしてください.</p>
-                        <p class="paddingLeft30 del ">[4]スケジュールを保存ボタンを押してください.</p>
-                        <p class="paddingLeft30 del ">[5]URLをコピーを押して,プロジェクトメンバーに共有してください.</p>
+                        <p class="del" style="padding: 3px;">[3]表の上部のパレットから色を選択し,ドラック&ドロップで予定を登録してください.</p>
+                        <p class="del" style="padding: 3px;">[4]スケジュールを保存ボタンを押してください.</p>
+                        <p class="del" style="padding: 3px;">[5]ページを更新して, 下の参加可能日などをメンバーに共有してください.</p>
                     </div>
                 </ui>
             </ul>
+        </div>
+        <div id="pickupArea">
+            <div class="guideArea" id="pickupGuide">
+                <p class="paddingLeft30">名前の横のチェックを変えることで参加メンバーを変更することができます.</p>
+            </div>
+            <div id="pickupOutput">
+                <fieldset style="width: 50%;margin:16px auto;border-radius: 15px;">
+                    <legend style="margin:0 auto">&nbsp;参加可能日のみ&nbsp;</legend>
+                    <div id="hOnly"></div>
+                </fieldset>
+                <fieldset style="width: 50%;margin:16px auto;border-radius: 15px;">
+                    <legend style="margin:0 auto">未確定・要調整を<span class="block">含む</span></legend>
+                    <div id="handm"></div>
+                </fieldset>
+            </div>
+
         </div>
 
         <div id="pickUpTableArea">
@@ -206,7 +364,7 @@
     //--------------------------------
     //テーブル作成------------------------------------------------------
     //状況の取得------------------------
-    function confirm(){
+    function confirm() {
         //認証状態の確認
         firebase.auth().onAuthStateChanged(async function (user) {
             if (user) {
@@ -243,13 +401,13 @@
             }
         }
         //認証状態の確認
-        loginMemberIndex=confirm();
+        loginMemberIndex = confirm();
         //それぞれのメンバーの行--------------
         memberName = await getProjectMembers();
         console.log(memberName);
         console.log("memberName.length : " + memberName.length);
         console.log("memberIndex:" + loginMemberIndex);
-        
+
         for (let i = 0; i < memberName.length; i++) {
             console.log(loginMemberIndex);
             var memberSch = await getProjectMemberSchedule(i);
@@ -265,7 +423,7 @@
             if (i == loginMemberIndex) {
                 //ログインした人のための処理----------
                 console.log("ログインした人のための処理");
-                $("<th class=\"headingRow\" ><p><input type=\"checkbox\" id="+"checkBox_"+i+" checked>" + memberName[i] + "</p></th>").appendTo(tableRow);
+                $("<th class=\"headingRow\" ><label for=\"checkBox_" + i + "\" class=\"joinMember loginMember\"><input type=\"checkbox\" id=\"checkBox_" + i + "\" name=\"pickup\" class=\"joinMember\" checked><span class=\"joinMember\"></span>" + memberName[i] + "</label></th>").appendTo(tableRow);
                 console.log("error前のuserId" + userId);
                 console.log("error前のloginMemberIndex" + loginMemberIndex);
                 userSchedule = await getUserSchedule(userId);
@@ -287,7 +445,7 @@
                 $(".firstGuide").hide();
             } else {
                 console.log("ログインしてない人のための処理");
-                $("<th class=\"headingRow\" ><input type=\"checkbox\" id="+"checkBox_"+i+" checked>" + memberName[i] + "</th>").appendTo(tableRow);
+                $("<th class=\"headingRow\" ><label for=\"checkBox_" + i + "\" class=\"joinMember\"><input type=\"checkbox\" id=\"checkBox_" + i + "\" name=\"pickup\" class=\"joinMember\" checked><span class=\"joinMember\"></span><span style=\"margin:2px;\">" + memberName[i] + "</span></label></th>").appendTo(tableRow);
                 for (let j = new Date(start); j <= finish; j.setDate(j.getDate() + 1)) {
                     for (let k = 0; k < 144; k++) {
                         if ((memberRow[count] % 3) == 0) {
@@ -379,6 +537,9 @@
                 .mouseup(function () {
                     isMouseDown = false;
                 });
+            $('input[name="pickup"]').on("change", function () {
+                clickPickUp();
+            });
         }
 
 
@@ -522,7 +683,7 @@
                     unLoginUserName = $("#unLoginUserName").val();
                     $(".hideArea").hide();
                     $("#modalOpen").hide();
-                    $("<p>" + unLoginUserName + "</p>").appendTo($("#plusCellbox"));
+                    $("<p style=\"text-align:center\">" + unLoginUserName + "</p>").appendTo($("#plusCellbox"));
                     //$("#plusCellbox").outerWidth();
 
                     //テーブルのサイズ調整----------------
@@ -534,38 +695,29 @@
                     $(".firstGuide").hide();
                 }
             }
+            $('input[name="pickup"]').on("change", function () {
+                clickPickUp();
+            });
         }
 
-        
-        schedule=await pickUp();
+
+        schedule = await pickUp();
         console.log(schedule);
-        if(schedule[0]!=null){
+        if (schedule[0] != null) {
             clickPickUp();
+            $("#pickupGuide").show();
+            $("#pickupArea").show();
         }
         console.log("作成完了");
 
     });
     //-----------------------------------------------------
-    async function clickPickUp(){
-        let pickUpSchedule=await pick(schedule);
-        let table = document.getElementById("pickUpTable");
-        console.log(table.rows.length);
-        if(table.rows.length>=1){
-            console.log("1");
-            table.deleteRow(0);
-            console.log(table.rows.length);
-            table.deleteRow(0);
-            console.log(table.rows.length);
-        }
-        //テーブルの作成
-        let tableRowOne=$("<tr></tr>").appendTo(table);
-        $("<th><p><span>" + "参加可能日のみ" + "</span></p></th>").appendTo(tableRowOne);
-        $("<th><p><span>" + "未確定を含む" + "</span></p></th>").appendTo(tableRowOne);
-
-        let tableRowTwo=$("<tr></tr>").appendTo(table);
-        $("<td><p><span style=\"white-space: pre-line\">" + pickUpSchedule[0] + "</span></p></td>").appendTo(tableRowTwo);
-        $("<td><p><span style=\"white-space: pre-line\">" + pickUpSchedule[1] + "</span></p></td></table>").appendTo(tableRowTwo);
-        
+    async function clickPickUp() {
+        let pickUpSchedule = await pick(schedule);
+        $("#hOnly").empty();
+        $("#hOnly").append("<div style=\"white-space: pre-line\">" + pickUpSchedule[0] + "</div>");
+        $("#handm").empty();
+        $("#handm").append("<div style=\"white-space: pre-line\">" + pickUpSchedule[1] + "</div>");
     }
     //----------------------------------------------------
     function scheduleSave() {

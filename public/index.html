@@ -21,22 +21,6 @@
       font-weight: bold;
     }
 
-    /*formを中央揃え*/
-    #inputArea {
-      text-align: center;
-    }
-
-    /*テキストを右に揃える*/
-    .textRight {
-      text-align: right;
-    }
-
-    table#inputArea {
-      margin: 0 auto;
-      transform: translateX(-3em);
-    }
-
-
     /*追加*/
     .headingRow {
       top: 0;
@@ -56,43 +40,6 @@
       height: 50px;
     }
 
-    .openbtn span {
-      display: inline-block;
-      transition: all.4s;
-      position: absolute;
-      left: 13px;
-      height: 2px;
-      background-color: #666;
-    }
-
-    .openbtn span:nth-of-type(1) {
-      top: 25px;
-      width: 50%;
-      transform: rotate(90deg);
-    }
-
-    .openbtn span:nth-of-type(2) {
-      top: 25px;
-      width: 50%;
-    }
-
-    .openbtn.active span:nth-of-type(1) {
-      transform: rotate(-45deg);
-      width: 50%;
-    }
-
-    .openbtn.active span:nth-of-type(2) {
-      transform: rotate(45deg);
-      width: 50%;
-    }
-
-
-    span.block {
-      display: inline-block;
-    }
-
-
-
     input[type="text"] {
       width: calc(100% - 140px);
       margin-bottom: 1.2em;
@@ -105,14 +52,17 @@
       padding: 0.6rem 1rem;
     }
 
+    @media only screen and (max-width: 1400px),
+    print {
+      input[type="date"] {
+        width: 90%;
+      }
+    }
+
     /* 1343px以上 */
     @media only screen and (min-width: 1343px),
     print {
       input[type="text"] {
-        min-width: 310px;
-      }
-
-      input[type="date"] {
         min-width: 310px;
       }
 
@@ -122,13 +72,6 @@
 
       dl dt {
         width: 7em;
-      }
-    }
-
-    /* 1451px以下 */
-    @media only screen and (max-width: 1451px) {
-      input[type="date"] {
-        width: 90%;
       }
     }
 
@@ -150,11 +93,25 @@
       }
     }
 
-    /*1280px以下 943px以上*/
+    /* 943px以上 */
     @media (min-width: 943px) {
       .content {
         width: 90%;
       }
+
+      #linkFormakeProgjectDiv {
+        display: none;
+      }
+    }
+
+    #linkFormakeProgject {
+      font-size: 1.4em;
+      font-weight: bold;
+      color: rgb(240, 173, 96);
+    }
+
+    #linkFormakeProgject {
+      padding: 1em;
     }
 
     /* 377px以上 943以下 */
@@ -193,10 +150,6 @@
       }
     }
 
-
-
-
-
     body * {
       box-sizing: border-box;
       line-height: 1;
@@ -227,7 +180,7 @@
     dl dt::after {
       content: '●';
       position: absolute;
-      right: -0.5em;
+      right: -12px;
       top: 5px;
       font-size: 22px;
       color: rgb(240, 173, 96);
@@ -240,8 +193,43 @@
     }
 
     .leftBar {
-      padding: 10px 20px 10px 20px;
-      margin: 10px;
+      padding: 10px 20px 10px 2%;
+      margin: 10px 0 10px 3%;
+    }
+
+    /* table表示 */
+    table {
+      overflow-x: scroll;
+    }
+
+    table td.drag {
+      min-width: 20px;
+      height: 10px;
+    }
+
+    td {
+      min-width: 20px;
+      height: 10px;
+      text-align: center;
+      vertical-align: middle;
+      border: 1px solid #fff;
+    }
+
+    th {
+      padding: 0 1em;
+    }
+
+    .headingRow {
+      top: 0;
+      padding: 3px 12px;
+    }
+
+    .headingCol span {
+      position: sticky;
+      top: 0;
+      left: 0;
+      /**/
+      background-color: #fff;
     }
   </style>
 
@@ -262,7 +250,7 @@
   <div class="content half">
     <div class="slide">
       <div class="leftBar">
-        <p style="text-align:center">
+        <p>
           <span style="font-weight: bold;" class="block">ミーティング,&nbsp; </span><span style="font-weight: bold;"
             class="block">ゲーム,&nbsp; </span><span style="font-weight: bold;" class="block">打ち上げ,&nbsp; </span><span
             style="font-weight: bold;" class="block">飲み会など</span><span class="block">複数人で</span>集まるとき,<span
@@ -270,76 +258,78 @@
             class="block">日程調整をする</span>ことができます.
         </p>
       </div>
-      <div>
-        <fieldset>
-          <legend style="margin:0 auto">
-            <h3 style="text-align:center">&lt;&lt; ココがすごい! &gt;&gt;</h3>
-          </legend>
-          <ul>
-            <li>
-              <p><span style="font-weight: bold;" class="block">ドラック&ドロップ</span>で<span class="block">入力</span>することができる.
-              </p>
-            </li>
-            <li>
-              <p><span style="font-weight: bold;" class="block">参加可能</span>,&nbsp;<span style="font-weight: bold;"
-                  class="block">未確定</span><span style="font-weight: bold;">・</span><span style="font-weight: bold;"
-                  class="block">要調整</span>,&nbsp;<span style="font-weight: bold;" class="block">参加不可</span>で<span
-                  class="block">共有する</span>ため他の<span class="block">ユーザー</span>に<span style="font-weight: bold;"
-                  class="block">詳しい予定が知られない.</span></p>
-            </li>
-            <li>
-              <p class="del"><span style="font-weight: bold;" class="block">"予定がない"</span><span
-                  style="font-weight: bold;">=</span><span style="font-weight: bold;" class="block">"参加可能"</span>ではない.
-              </p>
-              <p class="del">
-                <span class="block">スケジュールアプリ</span>などで<span class="block">時間を調整すると,</span><span
-                  class="block">予定がないと</span><span class="block">その時間を</span><span class="block">候補に挙げられる.</span>
-              </p>
-            </li>
-            <li>
-              <p><span class="block">複数のプロジェクトに</span><span class="block">ペーストする</span>ことができ,<span
-                  class="block">入力</span>を<span class="block">省くこと</span>ができる.</p>
-            </li>
-            <li>
-              <p><span>週間的な予定を</span><span>登録する</span>ことで,<span>さらに</span><span>入力</span>を<span>省くこと</span>ができる.</p>
-            </li>
-          </ul>
-        </fieldset>
-
+      <div style="text-align:center" id="linkFormakeProgjectDiv">
+        <a id="linkFormakeProgject" href="#makeProject">さっそく作ってみる.</a>
       </div>
 
-      <div style="box-sizing: border-box;
-     line-height: 1;">
-        <fieldset>
-          <legend style="margin:0 auto">
-            <h2 style="text-align:center">&nbsp;&nbsp;使い方&nbsp;&nbsp;</h2>
-          </legend>
-          <dl>
-            <dt>主催者</dt>
-            <dd>
-              <p class="del" style="padding-bottom: 12px;">1.&emsp;<span class="block">プロジェクト</span>の<span
-                  class="block">作成</span></p>
-              <p class="del">2.&emsp;<span class="block">URL</span>を<span class="block">メンバー</span>に<span
-                  class="block">共有</span></p>
-            </dd>
-            <dt>全員</dt>
-            <dd>
-              <p class="del">3.&emsp;<span class="block">スケジュール</span>を<span class="block">登録</span></p>
-            </dd>
-            <dt>提案者</dt>
-            <dd>
-              <p class="del">4.&emsp;<span class="block">参加する</span><span class="block">メンバー</span>を<span
-                  class="block">チェックし,</span><span class="block">ピックアップ</span>された<span class="block">時間</span>を<span
-                  class="block">共有</span></p>
-            </dd>
-          </dl>
-        </fieldset>
-      </div>
+      <fieldset>
+        <legend style="margin:0 auto">
+          <h3>&nbsp;&lt;&lt; ココがすごい! &gt;&gt;&nbsp;</h3>
+        </legend>
+        <ul>
+          <li>
+            <p><span style="font-weight: bold;" class="block">ドラック&ドロップ</span>で<span class="block">入力</span>することができる.
+            </p>
+          </li>
+          <li>
+            <p><span style="font-weight: bold;" class="block">参加可能</span>,&nbsp;<span style="font-weight: bold;"
+                class="block">未確定</span><span style="font-weight: bold;">・</span><span style="font-weight: bold;"
+                class="block">要調整</span>,&nbsp;<span style="font-weight: bold;" class="block">参加不可</span>で<span
+                class="block">共有する</span>ため他の<span class="block">ユーザー</span>に<span style="font-weight: bold;"
+                class="block">詳しい予定が知られない.</span></p>
+          </li>
+          <li>
+            <p class="del"><span style="font-weight: bold;" class="block">"予定がない"</span><span
+                style="font-weight: bold;">=</span><span style="font-weight: bold;" class="block">"参加可能"</span>ではない.
+            </p>
+            <p class="del">
+              <span class="block">スケジュールアプリ</span>などで<span class="block">時間を調整すると,</span><span
+                class="block">予定がないと</span><span class="block">その時間を</span><span class="block">候補に挙げられる.</span>
+            </p>
+          </li>
+          <li>
+            <p><span class="block">複数のプロジェクトに</span><span class="block">ペーストする</span>ことができ,<span
+                class="block">入力</span>を<span style="font-weight: bold;" class="block">省くこと</span>ができる.</p>
+          </li>
+          <li>
+            <p><span class="block">週間的な</span><span class="block">予定</span>を<span class="block">登録する</span>ことで,<span
+                class="block">さらに</span><span class="block">入力</span>を<span style="font-weight: bold;"
+                class="block">省くこと</span>ができる.</p>
+          </li>
+        </ul>
+      </fieldset>
+
+      <fieldset>
+        <legend style="margin:0 auto">
+          <h2>&nbsp;&nbsp;使い方&nbsp;&nbsp;</h2>
+        </legend>
+        <dl>
+          <dt>主催者</dt>
+          <dd>
+            <p class="del" style="padding-bottom: 12px;">1.&emsp;<span class="block">プロジェクト</span>の<span
+                class="block">作成</span></p>
+            <p class="del">2.&emsp;<span class="block">URL</span>を<span class="block">メンバー</span>に<span
+                class="block">共有</span></p>
+          </dd>
+          <dt>全員</dt>
+          <dd>
+            <p class="del">3.&emsp;<span class="block">スケジュール</span>を<span class="block">登録</span></p>
+          </dd>
+          <dt>提案者</dt>
+          <dd>
+            <p class="del">4.&emsp;<span class="block">参加する</span><span class="block">メンバー</span>を<span
+                class="block">チェックし,</span><span class="block">ピックアップ</span>された<span class="block">時間</span>を<span
+                class="block">共有</span></p>
+          </dd>
+        </dl>
+      </fieldset>
+
+
     </div>
     <div class="slideForm">
       <fieldset>
         <legend style="margin:0 auto">
-          <h3 style="text-align:center">&nbsp;&nbsp;プロジェクト作成&nbsp;&nbsp;</h3>
+          <h3 id="makeProject">&nbsp;&nbsp;プロジェクト作成&nbsp;&nbsp;</h3>
         </legend>
         <label class="effect">プロジェクト名 :<input id="project-name" type="text"></label><br>
         <label class="effect">プロジェクト開始 : <input id="project-start" type="date"></label><br>
