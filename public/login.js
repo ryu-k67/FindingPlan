@@ -108,12 +108,6 @@ firebase.auth().onAuthStateChanged(function(user) {
   }
 });
 
-function loginDisplay() {
-//  logout.classList.remove('hide');
-  inputarea.classList.add('hide');
-  info.textContent = "ログイン中です!";
-  window.location="mypage.html";
-}
 
 /*  
 function logoutDisplay() {
@@ -144,7 +138,7 @@ function loginDisplay() {
   inputarea.classList.add('hide');
   //let userName=getUserName(userid);
   info.textContent = "ログイン中です!";
-  //window.location = "mypage.html";
+  window.location = "mypage.html";
 }
 function getUserName(uid) {
   if (!uid) {

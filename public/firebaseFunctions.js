@@ -247,22 +247,30 @@ async function setprojectData(userId,memberName,newSchedule){
     })
     .then(function(){ 
         console.log("newSchedule successfully written!");
+
+        if(memIndex==0){
+            db.collection("project").doc(projectId).update({
+                memberId: firebase.firestore.FieldValue.arrayRemove(""),
+                projectMemberName:firebase.firestore.FieldValue.arrayRemove("")
+            })
+            .then(()=>{
+                location.reload();
+            })
+           .catch((error)=>{
+               console.log("データの取得失敗");
+           })
+            //db.collection("project").doc(projectId).collection("projectMemberPeriod").doc(documentId).delete();
+            console.log("delete");
+        }
+        else{
+            location.reload();
+        }
     })
     .catch(function(error) {
         console.error("Error writing document(newScedule): ", error);
     });
 
-    if(memIndex==0){
-        db.collection("project").doc(projectId).update({
-            memberId: firebase.firestore.FieldValue.arrayRemove(""),
-            projectMemberName:firebase.firestore.FieldValue.arrayRemove("")
-        })
-       .catch((error)=>{
-           console.log("データの取得失敗");
-       })
-        //db.collection("project").doc(projectId).collection("projectMemberPeriod").doc(documentId).delete();
-        console.log("delete");
-    }
+    
 }
 
 async function pickUp(){
