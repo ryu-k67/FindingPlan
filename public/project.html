@@ -490,6 +490,8 @@
             $(".drag")
                 .mousedown(function () {
                     isMouseDown = true;
+                    let idName = $(this).attr("id");
+                    let xb = Number(idName.slice(4));
                     //formの情報取得
                     var status = $('input:radio[name="selectStatus"]:checked').val();
                     console.log("value=" + status);
@@ -536,7 +538,40 @@
 
                         }
                     }
+                })
+                .mouseup(function () {
+                    let idName = $(this).attr("id");
+                    let xa = Number(idName.slice(4));
+                    paint(xb, xa);
                 });
+            function paint(xb, xa) {
+                var status = $('input:radio[name="selectStatus"]:checked').val();
+                if (xb > xa) {
+                    let tmp = xb;
+                    xb = xa;
+                    xa = tmp;
+                }
+                console.log("paint" + xb + "to" + xa);
+                for (let i = xb; i < xa; i++) {
+                    switch (status) {
+                        case "HIGHLIGHTED":
+                            $("#cell" + i).removeClass("middlelighted");
+                            $("#cell" + i).removeClass("notlighted");
+                            $("#cell" + i).addClass("highlighted");
+                            break;
+                        case "MIDDLELIGHTED":
+                            $("#cell" + i).removeClass("highlighted");
+                            $("#cell" + i).removeClass("notlighted");
+                            $("#cell" + i).addClass("middlelighted");
+                            break;
+                        case "NOTLIGHTED":
+                            $("#cell" + i).removeClass("highlighted");
+                            $("#cell" + i).removeClass("middlelighted");
+                            $("#cell" + i).addClass("notlighted");
+                            break;
+                    }
+                }
+            }
             $(document)
                 .mouseup(function () {
                     isMouseDown = false;
@@ -614,9 +649,12 @@
             //formの情報取得のための変数
             var forms = $(".selectStatusForm");
             var radioList = forms.selectStatus;
+            var xb, xa, yb, ya;
             $(".drag")
                 .mousedown(function () {
                     isMouseDown = true;
+                    let idName = $(this).attr("id");
+                    xb = Number(idName.slice(4));
                     //formの情報取得
                     var status = $('input:radio[name="selectStatus"]:checked').val();
                     console.log("value=" + status);
@@ -663,7 +701,40 @@
 
                         }
                     }
+                })
+                .mouseup(function () {
+                    let idName = $(this).attr("id");
+                    xa = Number(idName.slice(4));
+                    paint(xb, xa);
                 });
+            function paint(xb, xa) {
+                var status = $('input:radio[name="selectStatus"]:checked').val();
+                if (xb > xa) {
+                    let tmp = xb;
+                    xb = xa;
+                    xa = tmp;
+                }
+                console.log("paint" + xb + "to" + xa);
+                for (let i = xb; i < xa; i++) {
+                    switch (status) {
+                        case "HIGHLIGHTED":
+                            $("#cell" + i).removeClass("middlelighted");
+                            $("#cell" + i).removeClass("notlighted");
+                            $("#cell" + i).addClass("highlighted");
+                            break;
+                        case "MIDDLELIGHTED":
+                            $("#cell" + i).removeClass("highlighted");
+                            $("#cell" + i).removeClass("notlighted");
+                            $("#cell" + i).addClass("middlelighted");
+                            break;
+                        case "NOTLIGHTED":
+                            $("#cell" + i).removeClass("highlighted");
+                            $("#cell" + i).removeClass("middlelighted");
+                            $("#cell" + i).addClass("notlighted");
+                            break;
+                    }
+                }
+            }
             $(document)
                 .mouseup(function () {
                     isMouseDown = false;

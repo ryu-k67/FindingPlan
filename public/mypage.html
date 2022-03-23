@@ -234,9 +234,14 @@
         //formの情報取得のための変数
         var forms = $(".selectStatusForm");
         var radioList = forms.selectStatus;
+        var xb, xa, yb, ya;
         $(".drag")
             .mousedown(function () {
                 isMouseDown = true;
+                let idName = $(this).attr("id");
+                let idNum = Number(idName.slice(4));
+                xb = Math.floor(idNum % 144);
+                yb = Math.floor(idNum / 144);
                 //formの情報取得
                 var status = $('input:radio[name="selectStatus"]:checked').val();
                 console.log("value=" + status);
@@ -262,28 +267,58 @@
             })
             .mouseover(function () {
                 if (isMouseDown) {
-                    var status = $('input:radio[name="selectStatus"]:checked').val();
-                    console.log("value=" + status);
+                    let idName = $(this).attr("id");
+                    let idNum = Number(idName.slice(4));
+                    xa = Math.floor(idNum % 144);
+                    ya = Math.floor(idNum / 144);
+                    console.log("idName=" + idName + ", xa=" + xa + ", ya=" + ya);
+                    myColor(xb, xa, yb, ya);
+                }
+            })
+            .mouseup(function () {
+                let idName = $(this).attr("id");
+                let idNum = Number(idName.slice(4));
+                xa = Math.floor(idNum % 144);
+                ya = Math.floor(idNum / 144);
+                console.log("idName=" + idName + ", xa=" + xa + ", ya=" + ya);
+                myColor(xb, xa, yb, ya);
+            });
+        function myColor(xb, xa, yb, ya) {
+            var status = $('input:radio[name="selectStatus"]:checked').val();
+            if (yb > ya) {
+                let tmp = yb;
+                yb = ya;
+                ya = tmp;
+            }
+            if (xb > xa) {
+                let tmp = xb;
+                xb = xa;
+                xa = tmp;
+            }
+            for (let i = yb; i < ya + 1; i++) {
+                for (let j = xb; j < xa + 1; j++) {
+                    let num = i * 144 + j;
                     switch (status) {
                         case "HIGHLIGHTED":
-                            $(this).removeClass("middlelighted");
-                            $(this).removeClass("notlighted");
-                            $(this).addClass("highlighted");
+                            $("#cell" + num).removeClass("middlelighted");
+                            $("#cell" + num).removeClass("notlighted");
+                            $("#cell" + num).addClass("highlighted");
                             break;
                         case "MIDDLELIGHTED":
-                            $(this).removeClass("highlighted");
-                            $(this).removeClass("notlighted");
-                            $(this).addClass("middlelighted");
+                            $("#cell" + num).removeClass("highlighted");
+                            $("#cell" + num).removeClass("notlighted");
+                            $("#cell" + num).addClass("middlelighted");
                             break;
                         case "NOTLIGHTED":
-                            $(this).removeClass("highlighted");
-                            $(this).removeClass("middlelighted");
-                            $(this).addClass("notlighted");
+                            $("#cell" + num).removeClass("highlighted");
+                            $("#cell" + num).removeClass("middlelighted");
+                            $("#cell" + num).addClass("notlighted");
                             break;
 
                     }
                 }
-            });
+            }
+        }
         //週間スケのドラックしたときの処理-------------------------------------
         var xb, xa, yb, ya;
         $(".dragWeek")
@@ -311,7 +346,6 @@
                         $(this).removeClass("middlelighted");
                         $(this).addClass("notlighted");
                         break;
-
                 }
                 //$(this).toggleClass("highlighted");
                 return false; // prevent text selection
@@ -485,11 +519,19 @@
     function weekColor(xb, xa, yb, ya) {
         console.log("weekColor:xb" + xb + " xa" + xa + " yb" + yb + " ya" + ya);
         var status = $('input:radio[name="selectStatusWeek"]:checked').val();
-
+        if (yb > ya) {
+            let tmp = yb;
+            yb = ya;
+            ya = tmp;
+        }
+        if (xb > xa) {
+            let tmp = xb;
+            xb = xa;
+            xa = tmp;
+        }
         for (let i = yb; i < ya + 1; i++) {
             for (let j = xb; j < xa + 1; j++) {
                 let num = i * 144 + j;
-                $("#weekCell" + num).toggleClass("highlighted");
                 switch (status) {
                     case "HIGHLIGHTED":
                         $("#weekCell" + num).removeClass("middlelighted");
