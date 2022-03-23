@@ -210,9 +210,9 @@
         </h1>
         <nav class="navigation">
             <ul class="navigationList">
-                <li><button id="mypage" class="mypageBtn" onclick="mypageClick()">Myページ へ</button></li>
-                <li><button id="btnlogin" class="btnripple" onclick="login()">ログイン</button></li>
-                <li><button id="btnlogout" class="btnripple" onclick="logout()">ログアウト</button></li>
+                <li><a href="/mypage.html" class="toMypage" target="_blank" rel="noopener noreferrer">Myページへ</a></li>
+                <li><button id="login" class="btnripple" onclick="login()">ログイン</button></li>
+                <li><button id="logout" class="btnripple" onclick="logout()">ログアウト</button></li>
             </ul>
         </nav>
     </header>
@@ -286,8 +286,7 @@
                     <div class="guideArea del">
                         <p class="del">[2-1]ログインする方は下のボタンを押してください.</p>
                     </div>
-                    <button id="login" class="btnripple left30" onclick="onClickLogin()"
-                        style="margin:8px 0;">ログイン</button>
+                    <button class="btnripple left30" onclick="onClickLogin()" style="margin:8px 0;">ログイン</button>
                 </div>
             </ui>
             <ui style="padding: 0 1em;">
@@ -369,13 +368,13 @@
         //認証状態の確認
         firebase.auth().onAuthStateChanged(async function (user) {
             if (user) {
-                document.getElementById("btnlogin").style.display="none";
+                document.getElementById("login").style.display = "none";
                 userId = firebase.auth().currentUser.uid;
                 console.log(userId);
                 loginMemberIndex = await getLoginMemberIndex(userId);
             }
-            else{
-                document.getElementById("btnlogout").style.display="none";
+            else {
+                document.getElementById("logout").style.display = "none";
             }
             console.log(loginMemberIndex);
         });
