@@ -86,43 +86,6 @@ h1{
     margin: 0 auto;  
     position: relative;
 }
-/*================ << Myページへのボタン >> ================*/
-.mypageBtn {
-    /*矢印の基点とするためrelativeを指定*/
-    position: relative;
-    /*ボタンの形状*/
-    text-decoration: none;
-    display: inline-block;
-    font-size: 1em;
-    background: rgb(240, 173, 96);
-    color: #fff;
-    padding: 10px 40px 10px 30px;
-    border-radius: 25px;
-    text-align: center;
-    outline: none;
-    /*アニメーションの指定*/
-    transition: ease .2s;
-}
-/* 矢印が右に移動 */
-.mypageBtn::after {
-    content: '';
-    /*絶対配置で矢印の位置を決める*/
-    position: absolute;
-    top: 42%;
-    right: 23px;
-    /*矢印の形状*/
-    width: 5px;
-    height: 5px;
-    border-top: 2px solid #fff;
-    border-right: 2px solid #fff;
-    transform: rotate(45deg);
-    /*アニメーションの指定*/
-    transition: all .3s;
-}
-/*hoverした際の移動*/
-.mypageBtn:hover::after {
-    right: 13px;
-}
 /*================ << クリックしたら波紋が広がる >> ================*/
 .btnripple {
     /*波紋の基点とするためrelativeを指定*/
