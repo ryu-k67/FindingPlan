@@ -82,6 +82,9 @@ function login() {
       projectId=temp[1];
       window.location="project.html?project="+projectId;
     }
+    else if(url.match(/index/)){
+      window.location="index.html";
+    }
     else{
       loginDisplay();
     }
@@ -94,6 +97,7 @@ function login() {
 //ログアウト処理
 function logout() {
   firebase.auth().signOut();
+  location.reload();
   //window.location="index.html";
 };
 
