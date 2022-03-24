@@ -134,6 +134,9 @@ function setWeekSchedule(userId,weekSchedule){
     db.collection("account").doc(userId).update({
         week:weekSchedule
     })
+    .then(()=>{
+        changeMySchedule(userId, weekSchedule);
+    })
 }
 
 async function changeMySchedule(userId,weekAfterSchedule){
@@ -170,9 +173,20 @@ async function changeMySchedule(userId,weekAfterSchedule){
             console.log(userId);
             console.log(scheduleId[j]);
             console.log(mySchedule[j]);
-            db.collection("account").doc(userId).collection("myScheduleId").doc(scheduleId[j]).update({
-                mySchedule:mySchedule[j]
-            })
+            if(j<59){
+                db.collection("account").doc(userId).collection("myScheduleId").doc(scheduleId[j]).update({
+                    mySchedule:mySchedule[j]
+                })
+            }
+            else{
+                db.collection("account").doc(userId).collection("myScheduleId").doc(scheduleId[j]).update({
+                    mySchedule:mySchedule[j]
+                })
+                .then(()=>{
+                    location.reload();
+                })
+            }
+            
 
             today.setDate(today.getDate() + 1);     //日付を1日進める
         }
