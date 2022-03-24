@@ -123,7 +123,11 @@ function setMySchedule( uid, weekSchedule,mySchedule){
               
                 today.setDate(today.getDate() + 1);     //日付を1日進める
             }
-        }).catch((error) => {
+        })
+        .then(()=>{
+            location.reload();
+        })
+        .catch((error) => {
         console.log("データ取得失敗(${error})");
     });
 }
@@ -140,13 +144,21 @@ async function getMySchedule(uid) {
     var intToday = transDateToInt(stringDay);      //今日の日付をintの形に変換
 
     var pastDataId = [];     //過去の日付のドキュメントIDを入れる配列
-    var defaultPeriod = [];  //初期状態の日程
     var i = 0;               //ループ用
 
-    //初期状態の生成
-    for (i = 0; i < 144; i++) {
-        defaultPeriod[i] = 2;
+    var week=await getWeekSchedule(uid);//週間テンプレートの取得
+    var weekSchedule=[];
+    console.log(week);
+    for(i=0;i<7;i++){
+        console.log("shuu");
+        weekSchedule[i]=[];
+        for(let j=0;j<144;j++){
+            weekSchedule[i][j]=week[i*144+j];
+        }
     }
+
+    var mySchedule = [];      //今日から順にデータを入れておく
+    var data;
 
     i = 0;  //iの初期化
     var idBuff = [];
@@ -154,36 +166,41 @@ async function getMySchedule(uid) {
     console.log(uid);
     //過去の日付のデータ検索.ドキュメントIDを保存
     db.collection("account").doc(uid).collection("myScheduleId").where("date", "<", intToday).get()
-        .then((querySnapshot) => {
+        .then(async (querySnapshot) => {
             querySnapshot.forEach((doc) => {
                 //var data = doc.data();
                 console.log(doc.id);
                 pastDataId[i] = doc.id;
                 i++;
             });
-
+            let len=pastDataId.length;
             //過去のデータを更新
-            for (i = 0; i < pastDataId.length; i++) {
+            for (i = 0; i < len; i++) {
                 console.log("データ更新開始");
                 stringDay = finalDay.getFullYear() + "-" + (finalDay.getMonth() + 1) + "-" + finalDay.getDate();
                 var intDate = transDateToInt(stringDay);
                 //過去のデータのドキュメントを入力されていない日付のデータとして更新
-                db.collection("account").doc(uid).collection("myScheduleId").doc(pastDataId[i]).set({
-                    date: intDate,
-                    mySchedule: defaultPeriod
-                })
-                finalDay.setDate(finalDay.getDate() - 1);
+                if(i<len-1){
+                    db.collection("account").doc(uid).collection("myScheduleId").doc(pastDataId[i]).set({
+                        date: intDate,
+                        mySchedule: weekSchedule[finalDay.getDay()]
+                    })
+                    finalDay.setDate(finalDay.getDate() - 1);
+                }
+                else{
+                    db.collection("account").doc(uid).collection("myScheduleId").doc(pastDataId[i]).set({
+                        date: intDate,
+                        mySchedule: weekSchedule[finalDay.getDay()]
+                    })
+                }
             }
         }).catch((error) => {
             console.log("データ取得失敗(${error})");
         });
 
-    var mySchedule = [];      //今日から順にデータを入れておく
-    var data;
-
-    console.log("データ取得開始");
-    //日付で昇順にして日程を取得
-    mySchedule = await db.collection("account").doc(uid).collection("myScheduleId").orderBy("date").get()
+        console.log("データ取得開始");
+        //日付で昇順にして日程を取得
+        mySchedule = await db.collection("account").doc(uid).collection("myScheduleId").orderBy("date").get()
         .then(async (querySnapshot) => {
             let kari = [];
             kari = await querySnapshot.docs.map((doc) => {
@@ -196,9 +213,9 @@ async function getMySchedule(uid) {
                 }
                 return temp;
             });
-
+            
             let returnSchedule = [];
-
+            
             for(let i = 0;i < kari.length;i++){
                 for(let k = 0;k < kari[i].length;k++){
                     if((kari[i][k])%3==0){
@@ -213,13 +230,11 @@ async function getMySchedule(uid) {
                 }
             }
             return returnSchedule;
-
         }).catch((error) => {
             console.log("データ取得失敗(${error})");
         });
-
-    console.log(mySchedule);
-    return mySchedule;
+        console.log(mySchedule);
+        return mySchedule;
 }
 
 async function getLoginMemberIndex(uid){
