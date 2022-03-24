@@ -19,6 +19,10 @@
       font-weight: bold;
     }
 
+    .header {
+      height: 60px;
+    }
+
     .content {
       padding: 0 2rem;
       width: 68%;
@@ -42,8 +46,12 @@
       width: calc(100%-7em);
     }
 
-    label {
-      margin: 32px 0;
+    .space {
+      margin: 32px auto;
+    }
+
+    .spaceBtn {
+      margin: 16px 32px;
     }
 
     #inputarea {
@@ -66,19 +74,21 @@
 
   <div class="content">
     <div id="inputarea">
-      <label class="effect">ユーザ名 :<input id="name" type="name" required /></label><br>
-      <label class="effect">メールアドレス :<input id="email" type="email" placeholder="〇〇＠〇〇.〇〇" required /></label><br>
-      <label class="effect">パスワード :<input id="password" type="password" placeholder="6文字以上" required /></label><br>
+      <div class="space"><label class="effect">ユーザ名 :<input id="name" type="name" required /></label><br></div>
+      <div class="space"><label class="effect">メールアドレス :<input id="email" type="email" placeholder="〇〇＠〇〇.〇〇"
+            required /></label><br>
+        <div class="guideArea">ログイン処理以外には一切利用いたしませんのでご安心ください</div>
+      </div>
+      <div class="space"><label class="effect">パスワード :<input id="password" type="password" placeholder="6文字以上"
+            required /></label><br></div>
       <div style="text-align:center">
-        <button id="login" class="btnripple" onclick="login()">ログイン</button>
-        <button id="newuser" class="btnripple" onclick="createUser()">新規登録</button>
+        <button id="login" class="btnripple spaceBtn" onclick="login()">ログイン</button>
+        <button id="newuser" class="btnripple spaceBtn" onclick="createUser()">新規登録</button>
       </div>
     </div>
   </div>
-
   <!-- テキスト表示用 -->
   <p id="info"></p>
-
   <script src="login.js"></script>
   <script>
     let db = firebase.firestore();
