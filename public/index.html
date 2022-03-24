@@ -13,15 +13,6 @@
   <!--<link rel="stylesheet" href="login.css" />-->
   <link rel="stylesheet" type="text/css" href="base.css" />
   <style>
-    /*なぜかpushできない*/
-    /*ログイン中の表示*/
-    #info {
-      text-align: center;
-      font-size: 4em;
-      font-weight: bold;
-    }
-
-    /*追加*/
     .headingRow {
       top: 0;
     }
@@ -242,9 +233,10 @@
     </h1>
     <nav class="navigation">
       <ul class="navigationList">
-        <li><button id="mypage" class="mypageBtn" onclick="mypageClick()">Myページ へ</button></li>
-        <li><button id="login" class="btnripple" onclick="clickLogin()" style="display: none;">ログイン</button></li>
-        <li><button id="logout" class="btnripple" onclick="logout()" style="display: none;">ログアウト</button></li>
+
+        <li><a href="/mypage.html" class="toMypage" target="_blank" rel="noopener noreferrer">Myページへ</a></li>
+        <li><button id="login" class="btnripple" onclick="clickLogin() style="display: none;">ログイン</button></li>
+        <li><button id="logout" class="btnripple" onclick="logout()" style="display: none;>ログアウト</button></li>
       </ul>
     </nav>
   </header>
@@ -341,20 +333,19 @@
       </fieldset>
     </div>
   </div>
-  <!-- テキスト表示用 ----->
-  <p id="info"></p>
   <script>
-    let db=firebase.firestore();
-    let userid="";
+    let db = firebase.firestore();
+    let userid = "";
     window.addEventListener('DOMContentLoaded', function () {
-        firebase.auth().onAuthStateChanged(function (user) {
-            if (user) {
-              document.getElementById("logout").style.display="block";
-            }
-            else {
-              document.getElementById("login").style.display="block";
-            }
-        });
+
+      firebase.auth().onAuthStateChanged(function (user) {
+        if (user) {
+          $("#login").css("display", "block");
+        }
+        else {
+          $("#loginout").css("display", "block");
+        }
+      });
     })
 
     function clickLogin(){

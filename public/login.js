@@ -25,7 +25,7 @@ function createUser() {
   
   firebase.auth().createUserWithEmailAndPassword(mailAddress, password)
   .then(function(){  
-    inputarea.classList.add('hide');
+    inputarea.classList.add('hideArea');
     info.textContent = "アカウント作成中です!";
 
     userid = firebase.auth().currentUser.uid;
@@ -98,7 +98,6 @@ function login() {
 function logout() {
   firebase.auth().signOut();
   location.reload();
-  //window.location="index.html";
 };
 
 //認証状態の確認
@@ -139,7 +138,7 @@ function mypageClick() {
 }
 function loginDisplay() {
   //  logout.classList.remove('hide');
-  inputarea.classList.add('hide');
+  inputarea.classList.add('hideArea');
   //let userName=getUserName(userid);
   info.textContent = "ログイン中です!";
   window.location = "mypage.html";

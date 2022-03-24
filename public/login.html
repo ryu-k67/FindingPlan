@@ -9,29 +9,10 @@
   <script src="/__/firebase/6.2.0/firebase-firestore.js"></script>
   <script src="/__/firebase/6.2.0/firebase-auth.js"></script>
   <script src="/__/firebase/init.js"></script>
-
+  <link rel="stylesheet" type="text/css" href="base.css" />
   <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
   <title>ログイン-Finding Plan</title>
   <style>
-    .header-title {
-      width: 100%;
-      padding: 20px 0 10px 0;
-      margin: 0 4%;
-      margin-bottom: 100px;
-      font-size: 40px;
-      /*border-bottom: 1px solid #aaa;*/
-      text-decoration: none;
-      color: rgb(240, 173, 96);
-    }
-
-    .line {
-      border-bottom: 1px solid #aaa;
-    }
-
-    .hide {
-      display: none;
-    }
-
     #info {
       text-align: center;
       font-size: 4em;
@@ -39,130 +20,59 @@
     }
 
     .content {
-      margin: 0 auto;
       padding: 0 2rem;
-      position: relative;
       width: 68%;
-
-    }
-
-    /* クリックしたら波紋が広がる */
-    .btnripple {
-      /*波紋の基点とするためrelativeを指定*/
-      position: relative;
-      /*はみ出す波紋を隠す*/
-      overflow: hidden;
-      /*ボタンの形状*/
-      text-decoration: none;
-      display: inline-block;
-      background: rgb(240, 173, 96);
-      color: #fff;
-      padding: 10px 20px;
-      border-radius: 25px;
-      outline: none;
-      font-size: 1em;
-    }
-
-    .btnripple::after {
-      content: "";
-      /*絶対配置で波紋位置を決める*/
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      top: 0;
-      left: 0;
-      /*波紋の形状*/
-      background: radial-gradient(circle, #fff 10%, transparent 10%) no-repeat 50%;
-      transform: scale(10, 10);
-      /*はじめは透過0に*/
-      opacity: 0;
-      /*アニメーションの設定*/
-      transition: transform 0.3s, opacity 1s;
-    }
-
-    /*クリックされたあとの形状の設定*/
-    .btnripple:active::after {
-      transform: scale(0, 0);
-      transition: 0s;
-      opacity: 0.3;
     }
 
     input {
       font-size: 1em;
       margin: 0.5em;
-
       padding: 0.6rem 1rem;
-      width: 100%
     }
 
-    /*input欄のeffect*/
-    .effect :focus {
-      border: 1px solid rgb(240, 173, 96);
-      outline: none;
-      box-shadow: 0 0 5px 3px rgba(240, 173, 96, .5);
+    input[type="name"] {
+      width: calc(100%-6em);
+    }
+
+    input[type="email"] {
+      width: calc(100%-9em);
+    }
+
+    input[type="password"] {
+      width: calc(100%-7em);
+    }
+
+    label {
+      margin: 32px 0;
     }
 
     #inputarea {
       text-align: center;
     }
 
-    table {
-      margin: 0 auto;
-      transform: translateX(-3em);
-    }
-
-    td {
-      height: 6em;
-    }
-
     .text {
       text-align: right;
     }
   </style>
+
 </head>
 
 <body>
-  <header>
+  <header class="header">
     <h1>
-      <a href="/" class="header-title">Finding Plan</a>
-      <div class="line"></div>
+      <a href="/" class="header-title">Finding&nbsp;Plan</a>
     </h1>
   </header>
 
   <div class="content">
     <div id="inputarea">
-      <table>
-        <tr class="effect">
-          <td class="text">
-            <p>ユーザ名 : </p>
-          </td>
-          <td><input id="name" type="name" required /></td>
-        </tr>
-        <tr class="effect">
-          <td class="text">
-            <p>メールアドレス : </p>
-          </td>
-          <td>
-            <input id="email" type="email" placeholder="〇〇＠〇〇.〇〇" required />
-          </td>
-        </tr>
-        <tr class="effect">
-          <td class="text">
-            <p>パスワード : </p>
-          </td>
-          <td>
-            <input id="password" type="password" placeholder="6文字以上" required />
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <button id="login" class="btnripple" onclick="login()">ログイン</button>
-          </td>
-          <td>
-            <button id="newuser" class="btnripple" onclick="createUser()">新規登録</button>
-          </td>
-        </tr>
-      </table>
+      <label class="effect">ユーザ名 :<input id="name" type="name" required /></label><br>
+      <label class="effect">メールアドレス :<input id="email" type="email" placeholder="〇〇＠〇〇.〇〇" required /></label><br>
+      <label class="effect">パスワード :<input id="password" type="password" placeholder="6文字以上" required /></label><br>
+      <div style="text-align:center">
+        <button id="login" class="btnripple" onclick="login()">ログイン</button>
+        <button id="newuser" class="btnripple" onclick="createUser()">新規登録</button>
+      </div>
     </div>
   </div>
 
@@ -171,7 +81,7 @@
 
   <script src="login.js"></script>
   <script>
-    let db=firebase.firestore();
+    let db = firebase.firestore();
     console.log("a");
   </script>
 </body>
