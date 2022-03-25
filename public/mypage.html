@@ -140,8 +140,6 @@
                 週間スケを保存
             </button>
         </div>
-
-
     </div>
 
 </body>
@@ -155,8 +153,6 @@
         firebase.auth().onAuthStateChanged(function (user) {
             if (user) {
                 userid = firebase.auth().currentUser.uid;
-                //loginDisplay();
-                console.log(userid);
                 Load();
             }
             else {
@@ -165,11 +161,7 @@
         });
         return userid;
     })
-
-    //var uid = "a";
     async function Load() {
-        //(async function($){
-        console.log("a");
         var tableTag = $("<table id=\"dragTable\" class=\"dragArea\" cellpadding=\"0\" cellspacing=\"0\">");
 
         var tableFirstRow = $("<tr></tr>").appendTo(tableTag);
@@ -179,10 +171,7 @@
         }
         var week = ["日", "月", "火", "水", "木", "金", "土"];
         var date = new Date();
-        //userid = getUid();
-        console.log(userid);
         userSchedule = await getMySchedule(userid);
-        console.log(userSchedule);
         var count = 0;
         for (var i = 0; i < 60; i++) {
             var tableRow = $("<tr></tr>").appendTo(tableTag);
@@ -211,7 +200,6 @@
         }
         var week = ["日", "月", "火", "水", "木", "金", "土"];
         weekUserSchedule = await getWeekSchedule(userid);
-        console.log(weekUserSchedule.length);
         count = 0;
         for (let i = 0; i < 7; i++) {
             var weekTableRow = $("<tr></tr>").appendTo(weekTableTag);
@@ -229,17 +217,20 @@
         }
         $("#weekSchedule").append(weekTableTag);
         //テーブルのドラックした時の処理---------------------------------------
-        //(function($){
         var isMouseDown = false;
         //formの情報取得のための変数
         var forms = $(".selectStatusForm");
         var radioList = forms.selectStatus;
+        var xb, xa, yb, ya;
         $(".drag")
             .mousedown(function () {
                 isMouseDown = true;
+                let idName = $(this).attr("id");
+                let idNum = Number(idName.slice(4));
+                xb = Math.floor(idNum % 144);
+                yb = Math.floor(idNum / 144);
                 //formの情報取得
                 var status = $('input:radio[name="selectStatus"]:checked').val();
-                console.log("value=" + status);
                 switch (status) {
                     case "HIGHLIGHTED":
                         $(this).removeClass("middlelighted");
@@ -256,34 +247,61 @@
                         $(this).removeClass("middlelighted");
                         $(this).addClass("notlighted");
                         break;
-
                 }
-                return false; // prevent text selection
+                return false;
             })
             .mouseover(function () {
                 if (isMouseDown) {
-                    var status = $('input:radio[name="selectStatus"]:checked').val();
-                    console.log("value=" + status);
+                    let idName = $(this).attr("id");
+                    let idNum = Number(idName.slice(4));
+                    xa = Math.floor(idNum % 144);
+                    ya = Math.floor(idNum / 144);
+                    myColor(xb, xa, yb, ya);
+                }
+            })
+            .mouseup(function () {
+                let idName = $(this).attr("id");
+                let idNum = Number(idName.slice(4));
+                xa = Math.floor(idNum % 144);
+                ya = Math.floor(idNum / 144);
+                myColor(xb, xa, yb, ya);
+            });
+        function myColor(xb, xa, yb, ya) {
+            var status = $('input:radio[name="selectStatus"]:checked').val();
+            if (yb > ya) {
+                let tmp = yb;
+                yb = ya;
+                ya = tmp;
+            }
+            if (xb > xa) {
+                let tmp = xb;
+                xb = xa;
+                xa = tmp;
+            }
+            for (let i = yb; i < ya + 1; i++) {
+                for (let j = xb; j < xa + 1; j++) {
+                    let num = i * 144 + j;
                     switch (status) {
                         case "HIGHLIGHTED":
-                            $(this).removeClass("middlelighted");
-                            $(this).removeClass("notlighted");
-                            $(this).addClass("highlighted");
+                            $("#cell" + num).removeClass("middlelighted");
+                            $("#cell" + num).removeClass("notlighted");
+                            $("#cell" + num).addClass("highlighted");
                             break;
                         case "MIDDLELIGHTED":
-                            $(this).removeClass("highlighted");
-                            $(this).removeClass("notlighted");
-                            $(this).addClass("middlelighted");
+                            $("#cell" + num).removeClass("highlighted");
+                            $("#cell" + num).removeClass("notlighted");
+                            $("#cell" + num).addClass("middlelighted");
                             break;
                         case "NOTLIGHTED":
-                            $(this).removeClass("highlighted");
-                            $(this).removeClass("middlelighted");
-                            $(this).addClass("notlighted");
+                            $("#cell" + num).removeClass("highlighted");
+                            $("#cell" + num).removeClass("middlelighted");
+                            $("#cell" + num).addClass("notlighted");
                             break;
 
                     }
                 }
-            });
+            }
+        }
         //週間スケのドラックしたときの処理-------------------------------------
         var xb, xa, yb, ya;
         $(".dragWeek")
@@ -293,7 +311,6 @@
                 let idNum = Number(idName.slice(8));
                 xb = Math.floor(idNum % 144);
                 yb = Math.floor(idNum / 144);
-                console.log("idName=" + idName + ", xb=" + xb + ", yb=" + yb);
                 var status = $('input:radio[name="selectStatusWeek"]:checked').val();
                 switch (status) {
                     case "HIGHLIGHTED":
@@ -311,10 +328,8 @@
                         $(this).removeClass("middlelighted");
                         $(this).addClass("notlighted");
                         break;
-
                 }
-                //$(this).toggleClass("highlighted");
-                return false; // prevent text selection
+                return false;
             })
             .mouseover(function () {
                 if (isMouseDown) {
@@ -322,7 +337,6 @@
                     let idNum = Number(idName.slice(8));
                     xa = Math.floor(idNum % 144);
                     ya = Math.floor(idNum / 144);
-                    console.log("idName=" + idName + ", xa=" + xa + ", ya=" + ya);
                     weekColor(xb, xa, yb, ya);
                 }
             })
@@ -332,7 +346,6 @@
                 let idNum = Number(idName.slice(8));
                 xa = Math.floor(idNum % 144);
                 ya = Math.floor(idNum / 144);
-                console.log("idName=" + idName + ", xa=" + xa + ", ya=" + ya);
                 weekColor(xb, xa, yb, ya);
             });
 
@@ -340,156 +353,24 @@
             .mouseup(function () {
                 isMouseDown = false;
             });
-        //})
 
     };
-
-    //======仮の関数===============================================================================
-    /*async function getWeekSchedule() {
-        console.log("in function getWeek");
-        return [1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0];
-    }
-    //})
-    //仮のfunction----------------------------------------------------
-    /*
-    function getUserSchedule(uid) {
-        return [0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1];
-    }
-    */
-    //Date型の日付をintの形に変換
-    /*    function transDateToInt(date) {
-    
-            var dividDate = date.split("-", 3);
-    
-            /*日時をyyyymmdd(y:年,m:月,d:日)の形に変換*/
-    /*        var intDate = parseInt(dividDate[0] * 10000) + parseInt(dividDate[1] * 100) + parseInt(dividDate[2]);
-    
-            return intDate;
-        }
-        /*my日程を保存する関数.小塚*/
-    /*    function setMySchedule(uid, mySchedule) {
-    
-            var today = new Date();     //今日の日付
-            var scheduleDate;           //登録する日時をintの形で入れておく変数
-            var scheduleId = [];        //ドキュメントのIDを入れておく配列
-            var i = 0;
-    
-            //ドキュメントのIDをすべて取得
-            db.collection("account").doc(uid).collection("myScheduleId").orderBy("date").get()
-                .then(
-                    (querySnapshot) => {
-                        querySnapshot.forEach((doc) => {
-                            //var data = doc.data();
-                            console.log(doc.id);
-                            scheduleId[i] = doc.id;
-                            i++;
-                        });
-    
-                        var index = 0;  //配列は全部つながっているので分ける時に使用するインデックス
-                        //ループして全部更新
-                        for (i = 0; i < 60; i++, index = index + 144) {
-    
-                            var stringDay = today.getFullYear() + "-" + today.getMonth() + "-" + today.getDate();
-                            scheduleDate = transDateToInt(stringDay);   //日付の指定
-    
-                            //データの保存
-                            db.collection("account").doc(uid).collection("myScheduleId").doc(scheduleId[i]).set({
-                                date: scheduleDate,
-                                mySchedule: mySchedule.slice(index, index + 144)
-                            })
-    
-                            today.setDate(today.getDate() + 1);     //日付を1日進める
-                        }
-                    }).catch((error) => {
-                        console.log("データ取得失敗(${error})");
-                    });
-        }
-    
-        /*my日程を取得する関数.小塚*/
-    /*    async function getMySchedule(uid) {
-    
-            var today = new Date();     //今日の日付を取得
-            var finalDay = new Date();
-            var stringDay;
-            finalDay.setDate(finalDay.getDate() + 59);    //登録可能な一番遠い日付を入れておく
-            stringDay = today.getFullYear() + "-" + today.getMonth() + "-" + today.getDate();
-    
-            var intToday = transDateToInt(stringDay);      //今日の日付をintの形に変換
-    
-            var pastDataId = [];     //過去の日付のドキュメントIDを入れる配列
-            var defaultPeriod = [];  //初期状態の日程
-            var i = 0;               //ループ用
-    
-            //初期状態の生成
-            for (i = 0; i < 144; i++) {
-                defaultPeriod[i] = 1;
-            }
-    
-            i = 0;  //iの初期化
-            var idBuff = [];
-            console.log(i);
-            console.log(uid);
-            //過去の日付のデータ検索.ドキュメントIDを保存
-            db.collection("account").doc(uid).collection("myScheduleId").where("date", "<", intToday).get()
-                .then((querySnapshot) => {
-                    querySnapshot.forEach((doc) => {
-                        //var data = doc.data();
-                        console.log(doc.id);
-                        pastDataId[i] = doc.id;
-                        i++;
-                    });
-    
-                    //過去のデータを更新
-                    for (i = 0; i < pastDataId.length; i++) {
-                        console.log("データ更新開始");
-                        stringDay = finalDay.getFullYear() + "-" + finalDay.getMonth() + "-" + finalDay.getDate();
-                        var intDate = transDateToInt(stringDay);
-                        //過去のデータのドキュメントを入力されていない日付のデータとして更新
-                        db.collection("account").doc(uid).collection("myScheduleId").doc(pastDataId[i]).set({
-                            date: intDate,
-                            mySchedule: defaultPeriod
-                        })
-                        finalDay.setDate(finalDay.getDate() - 1);
-                    }
-                }).catch((error) => {
-                    console.log("データ取得失敗(${error})");
-                });
-    
-            var mySchedule = [];      //今日から順にデータを入れておく
-            var data;
-    
-            console.log("データ取得開始");
-            //日付で昇順にして日程を取得
-            mySchedule = await db.collection("account").doc(uid).collection("myScheduleId").orderBy("date").get()
-                .then(async (querySnapshot) => {
-                    let kari = [];
-                    kari = await querySnapshot.docs.map((doc) => {
-                        data = doc.data()["mySchedule"];
-                        let temp = [];
-                        console.log("でーた取得中");
-                        //値渡しで日程をコピー
-                        for (var k = 0; k < 144; k++) {
-                            temp[mySchedule.length + k] = data[k];
-                        }
-                        return temp;
-                    });
-                    return kari;
-                }).catch((error) => {
-                    console.log("データ取得失敗(${error})");
-                });
-            console.log(mySchedule);
-            return mySchedule;
-        }
-        */
     //週間スケの色付け--------------------------------------------------------------
     function weekColor(xb, xa, yb, ya) {
-        console.log("weekColor:xb" + xb + " xa" + xa + " yb" + yb + " ya" + ya);
         var status = $('input:radio[name="selectStatusWeek"]:checked').val();
-
+        if (yb > ya) {
+            let tmp = yb;
+            yb = ya;
+            ya = tmp;
+        }
+        if (xb > xa) {
+            let tmp = xb;
+            xb = xa;
+            xa = tmp;
+        }
         for (let i = yb; i < ya + 1; i++) {
             for (let j = xb; j < xa + 1; j++) {
                 let num = i * 144 + j;
-                $("#weekCell" + num).toggleClass("highlighted");
                 switch (status) {
                     case "HIGHLIGHTED":
                         $("#weekCell" + num).removeClass("middlelighted");
@@ -527,9 +408,7 @@
                 i++;
             }
         }
-        console.log(scheduleArray.length);
         setMySchedule(userid, weekUserSchedule, scheduleArray);
-        //changeMySchedule(userSchedule, scheduleArray, userid);
     }
     //週間テンプレート登録ボタンが押されたときの処理---------------------------------------
     function weekScheduleSave() {
@@ -547,10 +426,8 @@
                 i++;
             }
         }
-        console.log(weekScheduleArray);
         setWeekSchedule(userid, weekScheduleArray);
     }
-
 </script>
 <script src="firebaseCode.js"></script>
 <script src="firebaseCode_ryosuke.js"></script>

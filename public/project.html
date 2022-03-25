@@ -3,7 +3,6 @@
 
 <head>
     <meta charset="utf-8">
-    <!--  -->
     <script src="/__/firebase/6.2.0/firebase-app.js"></script>
     <script src="/__/firebase/6.2.0/firebase-firestore.js"></script>
     <script src="/__/firebase/6.2.0/firebase-auth.js"></script>
@@ -149,7 +148,6 @@
             background: rgba(0, 0, 0, .15);
             border-radius: 50%;
             transition: all .15s linear;
-
         }
 
         input.joinMember:checked+span.joinMember::before {
@@ -199,8 +197,6 @@
             }
         }
     </style>
-
-
 </head>
 
 <body>
@@ -211,7 +207,8 @@
         <nav class="navigation">
             <ul class="navigationList">
                 <li><a href="/mypage.html" class="toMypage" target="_blank" rel="noopener noreferrer">Myページへ</a></li>
-                <li><button id="login" class="btnripple" onclick="onClickLogin()" style="display: none;">ログイン</button></li>
+                <li><button id="login" class="btnripple" onclick="onClickLogin()" style="display: none;">ログイン</button>
+                </li>
                 <li><button id="logout" class="btnripple" onclick="logout()" style="display: none;">ログアウト</button></li>
             </ul>
         </nav>
@@ -228,7 +225,6 @@
                         class="block">共有</span>してください.</p>
             </div>
         </div>
-
         <form id="selectStatusForm" class="paddingLeft30 selectStatusClass">
             <div class="highlight">
                 <label for="high" class="radioH"><input type="radio" id="high" name="selectStatus" value="HIGHLIGHTED"
@@ -249,7 +245,6 @@
         </div>
         <div class="underTable hideArea">
             <div class="guideArea del">
-
                 <details>
                     <summary>ログインするといいこと</summary>
                     <div style="border-left: solid 5px rgb(240, 173, 96); margin-left:10%;">
@@ -301,7 +296,6 @@
                 </div>
             </ui>
         </ul>
-
         <div class="saveHideArea">
             <ul class="del underTable">
                 <ui class="del">
@@ -331,25 +325,18 @@
                     <div id="handm"></div>
                 </fieldset>
             </div>
-
         </div>
-
         <div id="pickUpTableArea">
             <table id="pickUpTable" cellpadding="0" cellspacing="0"></table>
         </div>
-
     </div>
-
 </body>
-
 <script src="firebaseCode.js"></script>
 <script src="firebaseCode_ryosuke.js"></script>
 <script src="firebaseFunctions.js"></script>
 <script src="change.js"></script>
 <script src="login.js"></script>
-
 <script>
-    //----------------------------------------------------------------
     let db = firebase.firestore();
     //ログインしてない人の名前------------
     var unLoginUserName;
@@ -361,7 +348,6 @@
     var schedule;//ピックアップ用
     //ログインした人のmemberIndex-------
     var loginMemberIndex = null;
-    //--------------------------------
     //テーブル作成------------------------------------------------------
     //状況の取得------------------------
     function confirm() {
@@ -370,33 +356,28 @@
             if (user) {
                 document.getElementById("login").style.display = "block";
                 userId = firebase.auth().currentUser.uid;
-                console.log(userId);
                 loginMemberIndex = await getLoginMemberIndex(userId);
             }
             else {
                 document.getElementById("logout").style.display = "block";
             }
-            console.log(loginMemberIndex);
         });
         return loginMemberIndex;
     }
     document.addEventListener('DOMContentLoaded', async (event) => {
         let projectName = await getProjectName();
-        console.log(projectName);
         innerName.innerHTML = projectName;
         var week = ["日", "月", "火", "水", "木", "金", "土"];
         //開始日と終了日の取得----------------
         finish = await getProjectPeriodFinish();
         start = await getProjectPeriodStart();
         var tableTag = $("<table id=\"dragTable\" class=\"dragArea\" cellpadding=\"0\" cellspacing=\"0\">");
-
         //1行目の作成-----------------------
         var tableFirstRow = $("<tr></tr>").appendTo(tableTag);
         var doubleHeadingCell = $("<th class=\"doubleHeading\" rowspan=\"2\"></th>").appendTo(tableFirstRow);
         for (let i = new Date(start); i <= finish; i.setDate(i.getDate() + 1)) {
             $("<th class=\"headingCol\" colspan=\"144\"><p><span>" + (i.getMonth() + 1) + "/" + i.getDate() + "(" + week[i.getDay()] + ")" + "</span></p></th>").appendTo(tableFirstRow);
         }
-
         //2行目の作成-----------------------
         var tableSecondRow = $("<tr></tr>").appendTo(tableTag);
         for (let i = new Date(start); i <= finish; i.setDate(i.getDate() + 1)) {
@@ -408,28 +389,17 @@
         loginMemberIndex = confirm();
         //それぞれのメンバーの行--------------
         memberName = await getProjectMembers();
-        console.log(memberName);
-        console.log("memberName.length : " + memberName.length);
-        console.log("memberIndex:" + loginMemberIndex);
-
         for (let i = 0; i < memberName.length; i++) {
-            console.log(loginMemberIndex);
             var memberSch = await getProjectMemberSchedule(i);
-            console.log(memberSch);
             if (memberSch == undefined || memberSch == null) {
-                console.log(loginMemberIndex);
                 break;
             }
             var memberRow = await adjustSchedule(memberSch, i);
             var tableRow = $("<tr></tr>").appendTo(tableTag);
             var count = 0;
-            console.log(loginMemberIndex);
             if (i == loginMemberIndex) {
                 //ログインした人のための処理----------
-                console.log("ログインした人のための処理");
                 $("<th class=\"headingRow\" ><label for=\"checkBox_" + i + "\" class=\"joinMember loginMember\"><input type=\"checkbox\" id=\"checkBox_" + i + "\" name=\"pickup\" class=\"joinMember\" checked><span class=\"joinMember\"></span>" + memberName[i] + "</label></th>").appendTo(tableRow);
-                console.log("error前のuserId" + userId);
-                console.log("error前のloginMemberIndex" + loginMemberIndex);
                 userSchedule = await getUserSchedule(userId);
                 for (let j = new Date(start); j <= finish; j.setDate(j.getDate() + 1)) {
                     for (let k = 0; k < 144; k++) {
@@ -448,7 +418,6 @@
                 //firstGuideを非表示---------------
                 $(".firstGuide").hide();
             } else {
-                console.log("ログインしてない人のための処理");
                 $("<th class=\"headingRow\" ><label for=\"checkBox_" + i + "\" class=\"joinMember\"><input type=\"checkbox\" id=\"checkBox_" + i + "\" name=\"pickup\" class=\"joinMember\" checked><span class=\"joinMember\"></span><span style=\"margin:2px;\">" + memberName[i] + "</span></label></th>").appendTo(tableRow);
                 for (let j = new Date(start); j <= finish; j.setDate(j.getDate() + 1)) {
                     for (let k = 0; k < 144; k++) {
@@ -463,19 +432,13 @@
                     }
                 }
             }
-            console.log(start, finish);
-            console.log(memberRow);
-
         }
-        console.log(loginMemberIndex);
         if (loginMemberIndex == null) {
             //新規欄-----------------------------------------------------------
             var tableRow = $("<tr></tr>").appendTo(tableTag);
             var plusCellbox = $("<th id=\"plusCellbox\" class=\"headingRow\"></th>").appendTo(tableRow);
-            console.log("unregister");
             unregistered();
         } else {
-            console.log("register");
             registered();
         }
         async function registered() {
@@ -490,9 +453,10 @@
             $(".drag")
                 .mousedown(function () {
                     isMouseDown = true;
+                    let idName = $(this).attr("id");
+                    let xb = Number(idName.slice(4));
                     //formの情報取得
                     var status = $('input:radio[name="selectStatus"]:checked').val();
-                    console.log("value=" + status);
                     switch (status) {
                         case "HIGHLIGHTED":
                             $(this).removeClass("middlelighted");
@@ -516,7 +480,6 @@
                 .mouseover(function () {
                     if (isMouseDown) {
                         var status = $('input:radio[name="selectStatus"]:checked').val();
-                        console.log("value=" + status);
                         switch (status) {
                             case "HIGHLIGHTED":
                                 $(this).removeClass("middlelighted");
@@ -536,7 +499,39 @@
 
                         }
                     }
+                })
+                .mouseup(function () {
+                    let idName = $(this).attr("id");
+                    let xa = Number(idName.slice(4));
+                    paint(xb, xa);
                 });
+            function paint(xb, xa) {
+                var status = $('input:radio[name="selectStatus"]:checked').val();
+                if (xb > xa) {
+                    let tmp = xb;
+                    xb = xa;
+                    xa = tmp;
+                }
+                for (let i = xb; i < xa; i++) {
+                    switch (status) {
+                        case "HIGHLIGHTED":
+                            $("#cell" + i).removeClass("middlelighted");
+                            $("#cell" + i).removeClass("notlighted");
+                            $("#cell" + i).addClass("highlighted");
+                            break;
+                        case "MIDDLELIGHTED":
+                            $("#cell" + i).removeClass("highlighted");
+                            $("#cell" + i).removeClass("notlighted");
+                            $("#cell" + i).addClass("middlelighted");
+                            break;
+                        case "NOTLIGHTED":
+                            $("#cell" + i).removeClass("highlighted");
+                            $("#cell" + i).removeClass("middlelighted");
+                            $("#cell" + i).addClass("notlighted");
+                            break;
+                    }
+                }
+            }
             $(document)
                 .mouseup(function () {
                     isMouseDown = false;
@@ -545,35 +540,16 @@
                 clickPickUp();
             });
         }
-
-
-        //認証状態の確認
-        //==================================================================================
-        /*firebase.auth().onAuthStateChanged(function (user) {
-            if (user) {
-                userId = firebase.auth().currentUser.uid;
-                console.log(userId);
-
-            }
-            unregistered();
-        });*/
         function sleep(waitMsec) {
             var startMsec = new Date();
-
             // 指定ミリ秒間だけループさせる（CPUは常にビジー状態）
             while (new Date() - startMsec < waitMsec);
         }
-
-        //sleep(10000);
-        console.log("ここ");
         async function unregistered() {
             if (userId != null) {
-                console.log("ろぐいんした");
                 //ログインした人のための処理----------
                 $("<p>" + (await getUserName(userId)) + "<p>").appendTo(plusCellbox);
-                console.log(userId);
                 userSchedule = await getUserSchedule(userId);
-                console.log(userSchedule);
                 var i = 0;
                 for (let j = new Date(start); j <= finish; j.setDate(j.getDate() + 1)) {
                     for (let k = 0; k < 144; k++) {
@@ -593,7 +569,6 @@
                 $(".firstGuide").hide();
             }
             else {
-                console.log("ろぐいんしてない");
                 //ログインしてない人のための処理-------
                 var i = 0;
                 $("<div id=\"modalOpen\" class=\"openbtn\"><span></span><span></span></div>").appendTo(plusCellbox);
@@ -604,8 +579,6 @@
                     }
                 }
             }
-
-            console.log("無視");
             $("#dragTableArea").append(tableTag);
             //テーブルのサイズ調整----------------
             $(".headingCol span").css("left", plusCellbox.outerWidth() + 10 + "px");
@@ -614,12 +587,14 @@
             //formの情報取得のための変数
             var forms = $(".selectStatusForm");
             var radioList = forms.selectStatus;
+            var xb, xa, yb, ya;
             $(".drag")
                 .mousedown(function () {
                     isMouseDown = true;
+                    let idName = $(this).attr("id");
+                    xb = Number(idName.slice(4));
                     //formの情報取得
                     var status = $('input:radio[name="selectStatus"]:checked').val();
-                    console.log("value=" + status);
                     switch (status) {
                         case "HIGHLIGHTED":
                             $(this).removeClass("middlelighted");
@@ -638,12 +613,11 @@
                             break;
 
                     }
-                    return false; // prevent text selection
+                    return false;
                 })
                 .mouseover(function () {
                     if (isMouseDown) {
                         var status = $('input:radio[name="selectStatus"]:checked').val();
-                        console.log("value=" + status);
                         switch (status) {
                             case "HIGHLIGHTED":
                                 $(this).removeClass("middlelighted");
@@ -660,15 +634,45 @@
                                 $(this).removeClass("middlelighted");
                                 $(this).addClass("notlighted");
                                 break;
-
                         }
                     }
+                })
+                .mouseup(function () {
+                    let idName = $(this).attr("id");
+                    xa = Number(idName.slice(4));
+                    paint(xb, xa);
                 });
+            function paint(xb, xa) {
+                var status = $('input:radio[name="selectStatus"]:checked').val();
+                if (xb > xa) {
+                    let tmp = xb;
+                    xb = xa;
+                    xa = tmp;
+                }
+                for (let i = xb; i < xa; i++) {
+                    switch (status) {
+                        case "HIGHLIGHTED":
+                            $("#cell" + i).removeClass("middlelighted");
+                            $("#cell" + i).removeClass("notlighted");
+                            $("#cell" + i).addClass("highlighted");
+                            break;
+                        case "MIDDLELIGHTED":
+                            $("#cell" + i).removeClass("highlighted");
+                            $("#cell" + i).removeClass("notlighted");
+                            $("#cell" + i).addClass("middlelighted");
+                            break;
+                        case "NOTLIGHTED":
+                            $("#cell" + i).removeClass("highlighted");
+                            $("#cell" + i).removeClass("middlelighted");
+                            $("#cell" + i).addClass("notlighted");
+                            break;
+                    }
+                }
+            }
             $(document)
                 .mouseup(function () {
                     isMouseDown = false;
                 });
-
             //+ボタンを押された時のログイン関係処理---------------------------------
             $(".openbtn").click(function () {
                 if (!$(this).hasClass("active")) {
@@ -679,7 +683,6 @@
                 }
                 $(this).toggleClass("active");
             })
-
             //ログインしていない人が名前を入力したとき-------------------------------
             $("#unLoginUserName")[0].addEventListener("keypress", getUnLoginUserName);
             function getUnLoginUserName(e) {
@@ -688,11 +691,8 @@
                     $(".hideArea").hide();
                     $("#modalOpen").hide();
                     $("<p style=\"text-align:center\">" + unLoginUserName + "</p>").appendTo($("#plusCellbox"));
-                    //$("#plusCellbox").outerWidth();
-
                     //テーブルのサイズ調整----------------
                     $(".headingCol span").css("left", plusCellbox.outerWidth() + 10 + "px");
-                    //$(".headiing");
                     //saveButtonを表示-----------------
                     $(".saveHideArea").show();
                     //firstGuideを非表示---------------
@@ -703,17 +703,12 @@
                 clickPickUp();
             });
         }
-
-
         schedule = await pickUp();
-        console.log(schedule);
         if (schedule[0] != null) {
             clickPickUp();
             $("#pickupGuide").show();
             $("#pickupArea").show();
         }
-        console.log("作成完了");
-
     });
     //-----------------------------------------------------
     async function clickPickUp() {
@@ -725,7 +720,6 @@
     }
     //----------------------------------------------------
     function scheduleSave() {
-        console.log("scheduleSave()");
         var scheduleArray = [];
         var i = 0;
         for (var j = new Date(start); j <= finish; j.setDate(j.getDate() + 1)) {
@@ -744,16 +738,13 @@
         if (memberName[0] == "") {
             num--;
         }
-        console.log("scheduleArray:" + scheduleArray);
         if (userId != null) {
             //ログインした人のための処理----------
-            console.log(userSchedule);
             setLoginMember(userId, scheduleArray, userSchedule);
         } else {
             //ログインしてない人のための処理-------
             setJoinMember(unLoginUserName, scheduleArray);
         }
-        //pickUp();
     }
     //--------------------------------------------------------
     async function getProjectPeriod() {
@@ -773,148 +764,24 @@
         if (!results[2]) return '';
         return decodeURIComponent(results[2].replace(/\+/g, " "));
     }
-    /*あるプロジェクトの期間のあるユーザーのマイスケジュールを返す*/
-    //async function getUserSchedule(userId){
-    /*あるプロジェクトIDのプロジェクトの開始日、終了日を取得する*/
-    /*    var projectId = getParam("project");
-        var period = [];
-        period = db.collection("project").doc(projectId).get()
-        .then((querySnapshot)=>{
-            return querySnapshot.data()[""]
-        })
-        /*あるユーザーIDをもつユーザーのプロジェクトの期間のマイスケジュールを取得する*/
-    /*    var projectPeriodMySchedule = [];
-        projectPeriodMySchedule = db.collection("account").doc(userId).collection("myScheduleId").where("date", ">=", period[0])
-                                                                                            .where("date", "<=", period[1]).get();
-        return projectPeriodMySchedule;
-    }*/
     async function getUserName(userId) {
         if (!userId) {
             userId = firebase.auth().currentUser.uid;
         }
         else {
-            console.log(userId);
             var userName = await db.collection("account").doc(userId).get()
                 .then((querySnapshot) => {
-                    //console.log(querySnapshot);
                     let temp = querySnapshot.data()["name"];
-                    //console.log(temp);
-                    console.log(temp);
                     return temp;
                 })
         }
-        console.log(userName);
         return userName;
     }
-    /*
-    function getProjectMembers(){
-        let ID;
-        let buff;
-        ID = getParam("project");
-        const docRef = db.ref("project/ID");
-        let members;
-        docRef.get().then((doc)=>{
-            members = doc.data();
-            console.log(members);
-        }).catch((error)=>{
-            console.log("データ取得失敗");
-        })
-        return members;
-    }
-    */
-    /*
-        async function getProjectMembers() {
-            let ID;
-            let buff;
-    
-            ID = getParam("project");
-            buff = await db.collection("project").doc(ID).get()
-                .then((querySnapshot) => {
-                    //console.log(querySnapshot.data()["projectmenberName"]);
-                    let temp = querySnapshot.data()["projectmenberName"];
-                    console.log(temp);
-                    //buff = querySnapshot.data()["projectmenberName"];
-                    //console.log(buff);
-                    //return buff; //MemberのMがfirebaseで小文字になってる
-                    //console.log(start);
-                    //const docSnapshot = querysnapshot.docs;
-                    //console.log(docSnapshot);
-                    return temp;
-                })
-                .catch((error) => {
-                    console.log("データの取得失敗");
-                })
-            console.log(buff);
-            return buff; //MemberのMがfirebaseで小文字になってる
-        }
-    
-        async function getProjectPeriodStart() {
-            let ID;
-            ID = getParam("project");
-            var buff;
-            buff = db.collection("project").doc(ID);
-            var start = buff.get().then((querySnapshot) => {
-                //console.log(querySnapshot.data()["projectPeiriod"]); 
-                let start = new Date(querySnapshot.data()["projectPeiriod"][0] / 10000, (querySnapshot.data()["projectPeiriod"][0] % 10000) / 100, (querySnapshot.data()["projectPeiriod"][0] % 100));
-                //console.log(start);
-                return start;
-            })
-                .catch((error) => {
-                    console.log("データの取得失敗");
-                })
-            //console.log("取得S"+start);
-            return start;
-        }
-    
-        async function getProjectPeriodFinish() {
-            let ID;
-            ID = getParam("project");
-            var buff;
-            buff = db.collection("project").doc(ID);
-            var finish = await buff.get().then((querySnapshot) => {
-                //console.log(querySnapshot.data()["projectPeiriod"]); 
-                let end = new Date(querySnapshot.data()["projectPeiriod"][1] / 10000, (querySnapshot.data()["projectPeiriod"][1] % 10000) / 100, (querySnapshot.data()["projectPeiriod"][1] % 100));
-                //console.log(end);
-                return end;
-            })
-                .catch((error) => {
-                    console.log("データの取得失敗");
-                })
-            //console.log("取得F"+finish);
-            return finish;
-        }
-    
-        async function getProjectMemberSchedule(memberIndex) {
-            /*
-            var ID=getParam("project");
-            var data = [];
-            data=await db.collection("project").doc(ID).collection("projectMenberPeriod").where("memberIndex","==",memberIndex)
-            .get().then((querySnapshot) =>{
-                let snap= querySnapshot.forEach((doc) => {
-                    let temp = doc.data()["projectSchedule"];
-                    //projectSchedule.push(data.projectSchedule);
-                    console.log(temp);
-                    return temp;
-                });
-                console.log(snap);
-                return snap;
-            }).catch((error) => {
-                console.log("データの取得に失敗しました(${error})");
-            })
-            console.log(data);
-            return data;
-            */
-    /*        return [0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1
-            ];
-        }
-    */
-
     //ログイン画面へ遷移--------------------------------------------
     function onClickLogin() {
         firebase.auth().onAuthStateChanged(function (user) {
             if (user) {
                 userId = firebase.auth().currentUser.uid;
-                console.log(userId);
             }
             else {
                 let projectId = getParam("project");
@@ -923,37 +790,11 @@
         });
     }
     //----------------------------------------------------------------
-
     //URLをコピーする---------------------------------------------------
     function copyToClipboard() {
         var url = location.href;
         navigator.clipboard.writeText(url);
     }
-
-
-    //登録ボタンが押されたときの処理---------------------------------------
-    /*function scheduleSave() {
-        var scheduleArray = [];
-        var i = 0;
-        for (var j = new Date(start); j <= finish; j.setDate(j.getDate() + 1)) {
-            for (var k = 0; k < 144; k++) {
-                if ($("#cell" + i).hasClass("highlighted")) {
-                    scheduleArray.push(1);
-                } else {
-                    scheduleArray.push(0);
-                }
-                i++;
-            }
-        }
-        if (userId != null) {
-            //ログインした人のための処理----------
-            setLoginMember(memberName.length + 1, scheduleArray);
-        } else {
-            //ログインしてない人のための処理-------
-            setJoinMember(getUserName(userId), scheduleArray);
-        }
-    }
-*/
 </script>
 
 
