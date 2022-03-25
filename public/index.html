@@ -178,7 +178,6 @@
     }
 
     dl dd {
-      /*width: calc(100% - 6em);*/
       padding: 0.5em 1.0em 1.2em;
       border-left: 2px solid #ccc;
     }
@@ -235,8 +234,8 @@
       <ul class="navigationList">
 
         <li><a href="/mypage.html" class="toMypage" target="_blank" rel="noopener noreferrer">Myページへ</a></li>
-        <li><button id="login" class="btnripple" onclick="clickLogin() style="display: none;">ログイン</button></li>
-        <li><button id="logout" class="btnripple" onclick="logout()" style="display: none;>ログアウト</button></li>
+        <li><button id="login" class="btnripple" onclick="clickLogin()" style="display: none;">ログイン</button></li>
+        <li><button id="logout" class="btnripple" onclick="logout()" style="display: none;">ログアウト</button></li>
       </ul>
     </nav>
   </header>
@@ -316,8 +315,6 @@
           </dd>
         </dl>
       </fieldset>
-
-
     </div>
     <div class="slideForm">
       <fieldset style="border: 2px solid rgba(240, 173, 96, 0.6);">
@@ -337,10 +334,10 @@
     let db = firebase.firestore();
     let userid = "";
     window.addEventListener('DOMContentLoaded', function () {
-
       firebase.auth().onAuthStateChanged(function (user) {
         if (user) {
           $("#login").css("display", "block");
+
         }
         else {
           $("#loginout").css("display", "block");
@@ -348,16 +345,16 @@
       });
     })
 
-    function clickLogin(){
+    function clickLogin() {
       firebase.auth().onAuthStateChanged(function (user) {
-            if (user) {
-                userId = firebase.auth().currentUser.uid;
-                console.log(userId);
-            }
-            else {
-                window.location = "login.html?index";
-            }
-        });
+        if (user) {
+          userId = firebase.auth().currentUser.uid;
+          console.log(userId);
+        }
+        else {
+          window.location = "login.html?index";
+        }
+      });
     }
   </script>
   <script src="login.js"></script>
