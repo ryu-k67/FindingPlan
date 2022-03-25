@@ -340,10 +340,10 @@
 
       firebase.auth().onAuthStateChanged(function (user) {
         if (user) {
-          $("#login").css("display", "block");
+          $("#logout").css("display", "block");
         }
         else {
-          $("#loginout").css("display", "block");
+          $("#login").css("display", "block");
         }
       });
     })
