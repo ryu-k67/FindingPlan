@@ -1,6 +1,3 @@
-//author:takuma
-//kumanomiM2
-
 /*url取得部分*/
 function getParam(name, url) {
     if (!url) url = window.location.href;
@@ -12,15 +9,156 @@ function getParam(name, url) {
     return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
 
-//書き込み	set
-//更新	update
-//読み取り	onおよびonce
-//削除	removeか、nullを書き込む
+//Date型の日付をintの形に変換
+function transDateToInt(date) {
+    var dividDate = date.split("-", 3);
+    /*日時をyyyymmdd(y:年,m:月,d:日)の形に変換*/
+    var intDate = parseInt(dividDate[0] * 10000) + parseInt(dividDate[1] * 100) + parseInt(dividDate[2]);
+    return intDate;
+}  
+  
+//プロジェクトの作成時の条件付け関数
+function forProject() {
+  var projectName = document.getElementById("project-name").value;
+  var projectStartPeriod = document.getElementById("project-start").value;
+  var projectFinishPeriod = document.getElementById("project-finish").value;
+  let temp=new Date();
+  let today=new Date(temp.getFullYear(),temp.getMonth(),temp.getDate()).getTime();
+  let start=new Date(projectStartPeriod.split("-",3)).getTime();
+  let finish=new Date(projectFinishPeriod.split("-",3)).getTime();
+  if (projectName == "") {
+    alert("プロジェクト名を入力してください");
+    return;
+  }
+  else if (projectStartPeriod == "") {
+    alert("プロジェクトの開始日を入力してください");
+    return;
+  }
+  else if (projectFinishPeriod == "") {
+    alert("プロジェクトの終了日を入力してください");
+    return;
+  }
+  else if(start < today){
+    alert("開始日には本日以降を選択してください");
+    return;
+  }
+  else if(start > finish){
+    alert("終了日は開始日以降を選択してください");
+    return;
+  }
 
-//データベースに関する
-//let db = firebase.firestore();
+  var projectId = getProjectId();
+  let url = "project.html?project=" + projectId;
+  createProject(projectName, projectStartPeriod, projectFinishPeriod, projectId, url);
+}
 
-/*あるプロジェクトの期間のあるユーザーのマイスケジュールを返す*/
+//プロジェクトを作成
+function createProject(projectName, projectStartPeriod, projectEndPeriod, projectId, url) {
+  /*日時をyyyymmdd(y:年,m:月,d:日)の形に変換*/
+  var startTime = transDateToInt(projectStartPeriod);
+  var endTime = transDateToInt(projectEndPeriod);
+  //データベースにドキュメントを更新.決まっていいない値はnullか0
+  db.collection("project").doc(projectId).set({
+    URL: url,
+    memberId: [""],
+    projectName: projectName,
+    projectPeriod: [startTime, endTime],
+    projectDecisionName: 0,
+    projectMemberName: [""]
+  })
+    .then(() => {
+      window.location = url;
+    });
+}
+
+//プロジェクトのIDを取得
+function getProjectId() {
+  let collection = db.collection("project");
+  let newProjectId = collection.doc().id;
+  return newProjectId;
+}
+
+//プロジェクト名の取得
+async function getProjectName(){
+    let ID=getParam("project");
+    let buff=await db.collection("project").doc(ID).get()
+    .then((querySnapshot)=>{
+        let temp=querySnapshot.data()["projectName"];
+        return temp;
+    })
+    .catch((error)=>{
+        console.log("データの取得失敗");
+    })
+    return buff;
+}
+
+//プロジェクトに登録しているメンバーを取得
+async function getProjectMembers(){
+    let ID;
+    let buff;
+    
+    ID = getParam("project");
+    buff = await db.collection("project").doc(ID).get()
+    .then((querySnapshot) => {
+         let temp = querySnapshot.data()["projectMemberName"];
+        return temp;
+    })
+    .catch((error)=>{
+        console.log("データの取得失敗");
+    })
+    return buff; //MemberのMがfirebaseで小文字になってる
+}
+
+//プロジェクトの開始日を取得
+async function getProjectPeriodStart(){
+    let ID;
+    ID = getParam("project");
+    var buff;
+    buff = db.collection("project").doc(ID);
+    var start = buff.get().then((querySnapshot) => {
+         let start =new Date(querySnapshot.data()["projectPeriod"][0]/10000,(querySnapshot.data()["projectPeriod"][0]%10000)/100-1,(querySnapshot.data()["projectPeriod"][0]%100));
+         return start;
+    })
+    .catch((error)=>{
+        console.log("データの取得失敗");
+    })
+    return start;
+}
+
+//プロジェクトの終了日を取得
+async function getProjectPeriodFinish(){
+    let ID;
+    ID = getParam("project");
+    var buff;
+    buff = db.collection("project").doc(ID);
+    var finish=await buff.get().then((querySnapshot) => {
+         let end =new Date(querySnapshot.data()["projectPeriod"][1]/10000,(querySnapshot.data()["projectPeriod"][1]%10000)/100-1,(querySnapshot.data()["projectPeriod"][1]%100));
+         return end;
+    })
+    .catch((error)=>{
+        console.log("データの取得失敗");
+    })   
+    return finish;
+}
+
+//プロジェクトメンバーがプロジェクトに登録しているスケジュール全員分を取得（myスケとの合体はしていない）
+async function getProjectMemberSchedule(memberIndex){
+    var ID=getParam("project");
+    var data = [];
+    var temp = await db.collection("project").doc(ID).collection("projectMemberPeriod").where("memberIndex","==",memberIndex).get()
+    .then(async(querySnapshot) =>{
+        var buff = await querySnapshot.docs.map(doc=>{
+            data = doc.data()["projectSchedule"];
+            return data;
+        })
+        return buff;
+    }).catch((error) => {
+        console.log("データの取得に失敗しました(${error})");
+    })
+    return temp[0];
+}
+
+//プロジェクトメンバー1人のプロジェクト期間分のマイスケジュールを取得
 async function getUserSchedule(userId){
     if(userId==null){
         return null;
@@ -34,7 +172,6 @@ async function getUserSchedule(userId){
     })
     /*あるユーザーIDをもつユーザーのプロジェクトの期間のマイスケジュールを取得する*/
     var projectPeriodMySchedule = [];
-    console.log(userId);
     projectPeriodMySchedule = await db.collection("account").doc(userId).collection("myScheduleId")
     .where("date", ">=", period[0]).where("date", "<=", period[1]).orderBy("date").get()
     .then(async (querySnapshot)=>{
@@ -45,7 +182,6 @@ async function getUserSchedule(userId){
             let day = doc.data()["date"];
             let temp = [];
             let m=0;
-            console.log("でーた取得中");
             //今日以前の穴埋め　（myスケでは削除されているため）
             if(day>period[0] && flag==0){
                 for(let i=0;i<day-period[0];i++){
@@ -62,7 +198,6 @@ async function getUserSchedule(userId){
             flag=1;
             return temp;
         });
-        console.log(kari);
         let returnSchedule = [];
         let buff=0;
         for(let i = 0;i < kari.length;i++){
@@ -75,149 +210,32 @@ async function getUserSchedule(userId){
         }
         return returnSchedule;
     })
-    console.log(projectPeriodMySchedule);
     return projectPeriodMySchedule;
 }
 
-/*function setJoinMenber(memberName,newSchedule){
-    var projectId = getParam("project");
-
-    db.collection("project").doc(projectId).set({
-        projectMemberName:memberName
-    })
-    .then(function() {
-        console.log("memberName successfully written!");
-    })
-    .catch(function(error) {
-        console.error("Error writing document(memberName): ", error);
-    });
-
-    db.collection("project").doc(projectId).collection(projectMemberPeriod).set({
-        projectSchedule:newSchedule
-    })
-    .then(function() {
-        console.log("newSchedule successfully written!");
-    })
-    .catch(function(error) {
-        console.error("Error writing document(newScedule): ", error);
-    });
-
-    return null;
-}*/
-/*わかりやすくするために仮引数memberIndexを改めmemIndexと名付けた*/
-/*function setLoginMember(memIndex,schedule){
-    var projectId = getParam("project");
-
-    db.collection("project").doc(projectId).collection(projectMemberPeriod).set({
-        memberIndex:memIndex,
-        projectSchedule:schedule
-    })
-    .then(function() {
-        console.log("Document successfully written!");
-    })
-    .catch(function(error) {
-        console.error("Error writing document: ", error);
-    });
-
-    return null;
-}
-*/
-////////////////////////////////////////////////
+//ログインなしのユーザーをプロジェクトメンバーに登録
 function setJoinMember(memberName,newSchedule){
-    console.log("set");
     setprojectData("",memberName,newSchedule);
-
-    /*
-    //データベースから名前の配列を取得してから、配列の要素を追加して、それをsetしないとだめでは？
-    var projectId = getParam("project");
-    var data;
-    //名前の配列を取得
-    let StringMenbaerName = db.collection("project").doc(projectId).get()
-    .then((querySnapshot) => {
-        var buff = querySnapshot.docs.map(doc=>{
-            data = doc.data()["projectMenberName"];
-        })
-        data = data + [memberName];     //新たにメンバーを追加
-   })
-   .catch((error)=>{
-       console.log("データの取得失敗");
-   })
-    db.collection("project").doc(projectId).set({
-        projectMemberName:data
-    })
-    .then(function() {
-        console.log("memberName successfully written!");
-    })
-    .catch(function(error) {
-        console.error("Error writing document(memberName): ", error);
-    });
-    //名前の設定ここまで
-    db.collection("project").doc(projectId).collection(projectMemberPeriod).add({
-        menberId: "0",
-        projectSchedule:newSchedule,
-        memberIndex:(data.length - 1)
-    })
-    .then(function() {
-        console.log("newSchedule successfully written!");
-    })
-    .catch(function(error) {
-        console.error("Error writing document(newScedule): ", error);
-    });
-    return null;
-    */
 }
 
-/*わかりやすくするために仮引数memberIndexを改めmemIndexと名付けた*/
+//ログインありのユーザーをプロジェクトメンバーに登録
 async function setLoginMember(userId,projectSchedule,mySchedule){
-    //var projectId = getParam("project");
-    //var userId = null;
-
-    //uidの取得
-    /*userId = await firebase.auth().onAuthStateChanged(function (user) {
-        var id = null;
-        if (user) {
-            id = firebase.auth().currentUser.uid;
-        }
-        return id;
-    });
-*/
     var memberName =await db.collection("account").doc(userId).get()
     .then((querySnapshot) =>{
-        console.log("start");
         var buff =  querySnapshot.data()["name"];
-        console.log(buff);
         return buff;  
     }).catch((error) => {
         console.log("データの取得に失敗しました(${error})");
     })
-    console.log(mySchedule);
     let schedule=await diffSchedule(userId,projectSchedule,mySchedule);
     setprojectData(userId,memberName,schedule);
-
-
-    /*
-    db.collection("project").doc(projectId).collection(projectMemberPeriod).set({
-        memberIndex:memIndex,
-        projectSchedule:schedule
-    })
-    .then(function() {
-        console.log("Document successfully written!");
-    })
-    .catch(function(error) {
-        console.error("Error writing document: ", error);
-    });
-    return null;
-    */
 }
 
-
+//プロジェクトにメンバーとそのスケジュールを登録
 async function setprojectData(userId,memberName,newSchedule){
     var projectId = getParam("project");
     var memIndex="";
-    console.log("kokomade");
-    //データベースから名前の配列を取得してから、配列の要素を追加して、それをsetしないとだめでは？
     //名前の配列を取得
-    
     db.collection("project").doc(projectId).update({
         memberId: firebase.firestore.FieldValue.arrayUnion(userId),
         projectMemberName:firebase.firestore.FieldValue.arrayUnion(memberName)
@@ -233,11 +251,9 @@ async function setprojectData(userId,memberName,newSchedule){
 
     let member=await getProjectMembers();
     memIndex=member.length-1;
-    console.log(member);
     if (member[0] == "") {
         memIndex--;
     }
-    console.log(memIndex);
     let documentId=db.collection("project").doc(projectId).collection("projectMemberPeriod").doc().id;
 
     db.collection("project").doc(projectId).collection("projectMemberPeriod").doc(documentId).set({
@@ -246,8 +262,6 @@ async function setprojectData(userId,memberName,newSchedule){
         memberIndex:memIndex
     })
     .then(function(){ 
-        console.log("newSchedule successfully written!");
-
         if(memIndex==0){
             db.collection("project").doc(projectId).update({
                 memberId: firebase.firestore.FieldValue.arrayRemove(""),
@@ -259,8 +273,6 @@ async function setprojectData(userId,memberName,newSchedule){
            .catch((error)=>{
                console.log("データの取得失敗");
            })
-            //db.collection("project").doc(projectId).collection("projectMemberPeriod").doc(documentId).delete();
-            console.log("delete");
         }
         else{
             location.reload();
@@ -269,13 +281,35 @@ async function setprojectData(userId,memberName,newSchedule){
     .catch(function(error) {
         console.error("Error writing document(newScedule): ", error);
     });
-
-    
 }
 
+//プロスケとmyスケとの比較で
+async function diffSchedule(userId,newSchedule,mySchedule){
+    let diffProjectSchedule=[];
+    for(let i=0;i<mySchedule.length;i++){
+        let diff=newSchedule[i]-mySchedule[i];
+        //変更がなければ0,変更があれば3:〇,4:△,5:×
+        if(diff==0){
+            diffProjectSchedule[i]=0;
+        }
+        else{
+            if(newSchedule[i]==0){
+                diffProjectSchedule[i]=3;
+            }
+            else if(newSchedule[i]==1){
+                diffProjectSchedule[i]=4;
+            }
+            else if(newSchedule[i]==2){
+                diffProjectSchedule[i]=5;
+            }
+        }
+    }
+    return diffProjectSchedule;
+}
+
+//プロジェクトメンバー全員分のスケジュールを取得（myスケとの合体もしてある）
 async function pickUp(){
     let member=await getProjectMembers();
-    console.log(member);
     let schedule=[];
     if(member[0]==""){
         return [null];
@@ -287,20 +321,17 @@ async function pickUp(){
     return schedule;
 }
 
+//チェックボックスで選択されたメンバーに共通する参加可能日、未確定日をそれぞれ配列で返す
 async function pick(schedule){
     let check=[];
-    console.log(memberName);
     if(memberName[0]==""){
-        console.log("a");
         return null;
     }
     for(let i=0;i<memberName.length;i++){
         let idName="checkBox_"+i;
         let element=document.getElementById(idName);
-        console.log(element);
         check[i]=element.checked;
     }
-    console.log(check);
     for(let i=0;i<memberName.length;i++){
         if(check[i]==true){
             break;
@@ -311,9 +342,7 @@ async function pick(schedule){
     }
     let OKschedule=[];
     let flag;//0:×含む 1:△含む〇 2:全部〇
-    console.log(schedule);
     for(let i=0;i<schedule[0].length;i++){
-        
         flag=2;
         for(let j=0;j<schedule.length;j++){
             if(check[j]==false){
@@ -329,7 +358,6 @@ async function pick(schedule){
         }
         OKschedule[i]=flag;
     }
-    console.log(OKschedule);
     let resultPerfect="";//〇だけ
     let resultAll="";//△含む
     let today=await getProjectPeriodStart();
@@ -349,14 +377,12 @@ async function pick(schedule){
                     flag=0;
                     continue;
                 }
-
                 if(j/6>=10){
                     time=Math.floor(j/6)+":"+j%6+"0~";
                 }
                 else{
                     time="0"+Math.floor(j/6)+":"+j%6+"0~";
                 }
-                
                 if(OKschedule[i*144+j]==1){
                     flag=1;
                     resultAll+=dayStr+time;
@@ -397,7 +423,6 @@ async function pick(schedule){
                 }
                 else if(OKschedule[i*144+j]==2){
                     flag=2;
-                    //resultAll+=time+"\n";
                     resultPerfect+=dayStr+time+"~";
                     if(j==143){
                         resultPerfect+="24:00\n";
@@ -438,6 +463,5 @@ async function pick(schedule){
             }
         }
     }
-    console.log([resultPerfect,resultAll]);
     return [resultPerfect,resultAll];
 }
