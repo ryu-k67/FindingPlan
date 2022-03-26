@@ -331,9 +331,11 @@
       firebase.auth().onAuthStateChanged(function (user) {
         if (user) {
           $("#logout").css("display", "block");
+          $("#login").css("display", "none");
         }
         else {
           $("#login").css("display", "block");
+          $("#logout").css("display", "none");
         }
       });
     })
