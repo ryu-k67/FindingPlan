@@ -10,7 +10,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
   <title>ホーム-Finding Plan</title>
   <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-  <!--<link rel="stylesheet" href="login.css" />-->
   <link rel="stylesheet" type="text/css" href="base.css" />
   <style>
     .headingRow {
@@ -21,7 +20,6 @@
       position: sticky;
       top: 0;
       left: 0;
-      /**/
       background-color: #fff;
     }
 
@@ -178,7 +176,6 @@
     }
 
     dl dd {
-      /*width: calc(100% - 6em);*/
       padding: 0.5em 1.0em 1.2em;
       border-left: 2px solid #ccc;
     }
@@ -219,7 +216,6 @@
       position: sticky;
       top: 0;
       left: 0;
-      /**/
       background-color: #fff;
     }
   </style>
@@ -233,7 +229,6 @@
     </h1>
     <nav class="navigation">
       <ul class="navigationList">
-
         <li><a href="/mypage.html" class="toMypage" target="_blank" rel="noopener noreferrer">Myページへ</a></li>
         <li><button id="login" class="btnripple" onclick="clickLogin()" style="display: none;">ログイン</button></li>
         <li><button id="logout" class="btnripple" onclick="logout()" style="display: none;">ログアウト</button></li>
@@ -254,7 +249,6 @@
       <div style="text-align:center" id="linkFormakeProgjectDiv">
         <a id="linkFormakeProgject" href="#makeProject">さっそく作ってみる.</a>
       </div>
-
       <fieldset>
         <legend style="margin:0 auto">
           <h3>&nbsp;&lt;&lt; ココがすごい! &gt;&gt;&nbsp;</h3>
@@ -291,7 +285,6 @@
           </li>
         </ul>
       </fieldset>
-
       <fieldset>
         <legend style="margin:0 auto">
           <h2>&nbsp;&nbsp;使い方&nbsp;&nbsp;</h2>
@@ -316,11 +309,9 @@
           </dd>
         </dl>
       </fieldset>
-
-
     </div>
     <div class="slideForm">
-      <fieldset>
+      <fieldset style="border: 2px solid rgba(240, 173, 96, 0.6);">
         <legend style="margin:0 auto">
           <h3 id="makeProject">&nbsp;&nbsp;プロジェクト作成&nbsp;&nbsp;</h3>
         </legend>
@@ -337,7 +328,6 @@
     let db = firebase.firestore();
     let userid = "";
     window.addEventListener('DOMContentLoaded', function () {
-
       firebase.auth().onAuthStateChanged(function (user) {
         if (user) {
           $("#logout").css("display", "block");
@@ -347,17 +337,15 @@
         }
       });
     })
-
-    function clickLogin(){
+    function clickLogin() {
       firebase.auth().onAuthStateChanged(function (user) {
-            if (user) {
-                userId = firebase.auth().currentUser.uid;
-                console.log(userId);
-            }
-            else {
-                window.location = "login.html?index";
-            }
-        });
+        if (user) {
+          userId = firebase.auth().currentUser.uid;
+        }
+        else {
+          window.location = "login.html?index";
+        }
+      });
     }
   </script>
   <script src="login.js"></script>
