@@ -442,6 +442,7 @@
             $(".headingCol span").css("left", doubleHeadingCell.outerWidth() + 10 + "px");
             //テーブルのドラックした時の処理---------------------------------------
             var isMouseDown = false;
+            var xb, xa, yb, ya;
             //formの情報取得のための変数
             var forms = $(".selectStatusForm");
             var radioList = forms.selectStatus;
@@ -449,7 +450,7 @@
                 .mousedown(function () {
                     isMouseDown = true;
                     let idName = $(this).attr("id");
-                    let xb = Number(idName.slice(4));
+                    xb = Number(idName.slice(4));
                     //formの情報取得
                     var status = $('input:radio[name="selectStatus"]:checked').val();
                     switch (status) {
@@ -497,7 +498,7 @@
                 })
                 .mouseup(function () {
                     let idName = $(this).attr("id");
-                    let xa = Number(idName.slice(4));
+                    xa = Number(idName.slice(4));
                     paint(xb, xa);
                 });
             function paint(xb, xa) {
